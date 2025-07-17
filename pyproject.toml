@@ -5,3 +5,11 @@ description = "CLI for creating sweepstakes"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
+
+[tool.uv]
+package = false
+dev-dependencies = [
+  "pytest",
+  "pytest-clarity",
+  "ruff"
+]
