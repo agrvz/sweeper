@@ -1,6 +1,11 @@
-def main():
-    print("Hello from sweeper!")
+import click
+
+from sweeper.draw import draw
 
 
-if __name__ == "__main__":
-    main()
+@click.group()
+def sweep():
+    pass
+
+
+sweep.add_command(draw)

@@ -1,15 +1,30 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "sweeper"
 version = "0.1.0"
 description = "CLI for creating sweepstakes"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "click>=8.2.1",
+    "prettytable>=3.16.0",
+]
 
-[tool.uv]
-package = false
-dev-dependencies = [
+[dependency-groups]
+dev = [
   "pytest",
   "pytest-clarity",
   "ruff"
 ]
+
+[project.scripts]
+sweep = "sweeper.main:sweep"
+
+[tool.uv]
+package = true
+
+[tool.ruff.format]
+docstring-code-format = true
