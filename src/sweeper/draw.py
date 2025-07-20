@@ -101,14 +101,3 @@ def draw_command(
         teams=teams_list,
         delay=delay,
     )
-
-
-# For debugging
-if __name__ == "__main__":
-    draw_command(
-        teams=Path("teams.csv"),
-        teams_column=1,
-        participants=Path("participants.csv"),
-        participants_column=1,
-        delay=0.1,
-    )

@@ -9,3 +9,7 @@ def sweep():
 
 
 sweep.add_command(draw_command)
+
+
+if __name__ == "__main__":
+    sweep()
