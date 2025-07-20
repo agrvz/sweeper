@@ -52,6 +52,9 @@ def load_csv(
     Load a CSV file and return the contents of a single column as a list of strings.
     You can specify the column to load either by name or by index.
     """
+    if not column_name and not column_index:
+        raise ValueError("You must pass either column_name or column_index.")
+
     if column_name and column_index:
         raise ValueError("You must pass either column_name or column_index, not both.")
 
