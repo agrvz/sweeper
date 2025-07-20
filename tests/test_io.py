@@ -12,20 +12,6 @@ from sweeper.io import (
 )
 
 
-@pytest.fixture
-def temp_text_file():
-    with NamedTemporaryFile(delete=False, mode="w", suffix=".txt") as file:
-        yield Path(file.name)
-    file.close()
-
-
-@pytest.fixture
-def temp_csv_file():
-    with NamedTemporaryFile(delete=False, mode="w", suffix=".csv") as file:
-        yield Path(file.name)
-    file.close()
-
-
 def test_get_lines_from_file(temp_text_file):
     expected_lines = ["alpha", "bravo", "charlie"]
     with open(temp_text_file, "w") as f:

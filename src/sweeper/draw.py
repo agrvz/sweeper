@@ -47,14 +47,20 @@ def draw(participants: list, teams: list, delay: float = 1.0) -> dict:
 
 
 @click.command()
-@click.option("--teams", type=str, help="Path to file containing list of teams")
+@click.option(
+    "--teams",
+    type=click.Path(exists=True, readable=True, dir_okay=False),
+    help="Path to file containing list of teams",
+)
 @click.option(
     "--teams-column",
     type=str,
     help="Column name or index for teams file, if a CSV file",
 )
 @click.option(
-    "--participants", type=str, help="Path to file containing list of participants"
+    "--participants",
+    type=click.Path(exists=True, readable=True, dir_okay=False),
+    help="Path to file containing list of participants",
 )
 @click.option(
     "--participants-column",
@@ -80,6 +86,10 @@ def draw_command(
             teams_list = load_csv(filepath=teams, column_index=int(teams_column))
         except ValueError:
             teams_list = load_csv(filepath=teams, column_name=teams_column)
+    elif teams.suffix == ".txt":
+        teams_list = get_lines_from_file(filepath=teams)
+    else:
+        raise ValueError("Teams file must be a .csv or .txt file.")
 
     if participants.suffix == ".csv":
         try:
@@ -91,10 +101,10 @@ def draw_command(
             participants_list = load_csv(
                 filepath=participants, column_name=participants_column
             )
-
-    if teams.suffix == ".txt":
-        teams_list = get_lines_from_file(filepath=teams)
+    elif participants.suffix == "txt":
         participants_list = get_lines_from_file(filepath=participants)
+    else:
+        raise ValueError("Participants file must be a .csv or .txt file.")
 
     return draw(
         participants=participants_list,
