@@ -1,11 +1,49 @@
 import random
 import time
+from copy import deepcopy
 from pathlib import Path
 
 import click
 from prettytable import PrettyTable
 
 from sweeper.io import get_lines_from_file, load_csv
+
+
+def draw(participants: list, teams: list, delay: float = 1.0) -> dict:
+    """
+    Draw a random team for each participant and return a dictionary mapping
+    participants to teams. Does not modify original lists in place.
+    """
+    result = {}
+    if len(teams) < len(participants):
+        raise ValueError("There are not enough teams to give every participant a team.")
+
+    teams_copy = deepcopy(teams)
+    participants_copy = deepcopy(participants)
+
+    for index, participant in enumerate(participants_copy):
+        # Remove a random team from the list
+        team = teams_copy.pop(random.randint(0, len(teams_copy) - 1))
+        result[participant] = team
+        print(f"Participant {index + 1}: {participant}")
+        time.sleep(delay)
+        print("\nDrawing...\n")
+        time.sleep(delay)
+        print(f"{participant} ... draws ... {team}\n")
+        time.sleep(delay * 2)
+        print("------------------------------------\n")
+
+    print(f"Undrawn teams ({len(teams_copy)}): {teams_copy}\n")
+    time.sleep(delay)
+
+    table = PrettyTable(["Participant", "Team"])
+    for key, val in result.items():
+        table.add_row([key, val])
+    table.sortby = "Participant"
+
+    print(table)
+    print("\nDraw complete.\n")
+    return result
 
 
 @click.command()
@@ -26,7 +64,7 @@ from sweeper.io import get_lines_from_file, load_csv
 @click.option(
     "--delay", default=1, type=float, help="Delay between draw rounds in seconds"
 )
-def draw(
+def draw_command(
     *, teams: Path, teams_column, participants: Path, participants_column, delay: float
 ) -> dict:
     """
@@ -39,7 +77,7 @@ def draw(
     if teams.suffix == ".csv":
         try:
             int(teams_column)
-            teams_list = load_csv(filepath=teams, column_index=teams_column)
+            teams_list = load_csv(filepath=teams, column_index=int(teams_column))
         except ValueError:
             teams_list = load_csv(filepath=teams, column_name=teams_column)
 
@@ -58,41 +96,19 @@ def draw(
         teams_list = get_lines_from_file(filepath=teams)
         participants_list = get_lines_from_file(filepath=participants)
 
-    if len(teams_list) < len(participants_list):
-        print("There are not enough teams to give every participant a team.")
-        return None
-    else:
-        result = {}
-        for index, participant in enumerate(participants_list):
-            # Remove a random team from the list
-            team = teams_list.pop(random.randint(0, len(teams_list) - 1))
-            result[participant] = team
-            print(f"Participant {index + 1}: {participant}")
-            time.sleep(delay)
-            print("\nDrawing...\n")
-            time.sleep(delay)
-            print(f"{participant} ... draws ... {team}\n")
-            time.sleep(delay * 2)
-            print("------------------------------------\n")
-
-        print(f"Undrawn teams: {teams_list}\n")
-        time.sleep(delay)
-
-        table = PrettyTable(["Participant", "Team"])
-        for key, val in result.items():
-            table.add_row([key, val])
-        table.sortby = "Participant"
-
-        print(table)
-        print("\nDraw complete.")
-        return result
+    return draw(
+        participants=participants_list,
+        teams=teams_list,
+        delay=delay,
+    )
 
 
+# For debugging
 if __name__ == "__main__":
-    draw(
+    draw_command(
         teams=Path("teams.csv"),
-        teams_column="name",
+        teams_column=1,
         participants=Path("participants.csv"),
-        participants_column="name",
+        participants_column=1,
         delay=0.1,
     )
