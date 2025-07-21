@@ -1,6 +1,5 @@
 import csv
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 
 import pytest
 
@@ -12,15 +11,14 @@ from sweeper.io import (
 )
 
 
-def test_get_lines_from_file(temp_text_file):
+def test_get_lines_from_file(temp_txt_file):
     expected_lines = ["alpha", "bravo", "charlie"]
-    with open(temp_text_file, "w") as f:
-        f.write("\n".join(expected_lines))
+    temp_txt_file.write_text("\n".join(expected_lines))
 
-    lines = get_lines_from_file(temp_text_file)
+    lines = get_lines_from_file(temp_txt_file)
     assert lines == expected_lines
 
-    temp_text_file.unlink()
+    temp_txt_file.unlink()
 
 
 def test_get_lines_from_file_invalid_path():
@@ -47,13 +45,8 @@ def test_load_csv_rows_as_lists_invalid_path():
 
 
 def test_load_csv_rows_as_lists_empty_file(temp_csv_file):
-    with open(temp_csv_file, "w") as file:
-        pass
-
     with pytest.raises(ValueError, match="is empty"):
         rows = load_csv_rows_as_lists(temp_csv_file)
-
-    temp_csv_file.unlink()
 
 
 def test_load_csv_rows_as_dicts(temp_csv_file):
@@ -78,13 +71,8 @@ def test_load_csv_rows_as_dicts_invalid_path():
 
 
 def test_load_csv_rows_as_dicts_empty_file(temp_csv_file):
-    with open(temp_csv_file, "w") as file:
-        pass
-
     with pytest.raises(ValueError, match="is empty"):
         rows = load_csv_rows_as_dicts(temp_csv_file)
-
-    temp_csv_file.unlink()
 
 
 def test_load_csv_by_column_name():

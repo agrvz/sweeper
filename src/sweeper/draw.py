@@ -101,7 +101,7 @@ def draw_command(
             participants_list = load_csv(
                 filepath=participants, column_name=participants_column
             )
-    elif participants.suffix == "txt":
+    elif participants.suffix == ".txt":
         participants_list = get_lines_from_file(filepath=participants)
     else:
         raise ValueError("Participants file must be a .csv or .txt file.")

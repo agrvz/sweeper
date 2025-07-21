@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 from click.testing import CliRunner
 
@@ -10,6 +12,23 @@ def test_draw():
     result = draw(participants=participants, teams=teams, delay=0)
     assert len(result) == 3
     assert list(result.keys()) == ["Harold", "Jim", "Margaret"]
+
+
+def test_draw_command(temp_teams_txt_file: Path, temp_participants_txt_file: Path):
+    runner = CliRunner()
+    result = runner.invoke(
+        draw_command,
+        [
+            "--teams",
+            str(temp_teams_txt_file),
+            "--participants",
+            str(temp_participants_txt_file),
+            "--delay",
+            "0",
+        ],
+    )
+    assert result.exit_code == 0
+    assert "Jim" in result.output
 
 
 def test_too_few_teams_raises_error():
@@ -38,11 +57,11 @@ def test_file_does_not_exist_raises_error():
     assert "File 'doesnotexist.txt' does not exist" in result.output
 
 
-def test_invalid_file_suffix_raises_error(temp_py_file):
+def test_invalid_file_suffix_raises_error(temp_py_file: Path):
     runner = CliRunner()
     result = runner.invoke(
         draw_command,
-        ["--teams", temp_py_file, "--participants", temp_py_file],
+        ["--teams", str(temp_py_file), "--participants", str(temp_py_file)],
     )
     assert result.exit_code != 0
     assert isinstance(result.exception, ValueError)
