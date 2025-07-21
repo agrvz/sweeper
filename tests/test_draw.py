@@ -14,6 +14,21 @@ def test_draw():
     assert list(result.keys()) == ["Harold", "Jim", "Margaret"]
 
 
+def test_draw_too_few_teams_raises_error():
+    with pytest.raises(ValueError):
+        participants = ["Harold", "Jim"]
+        teams = ["Bengals"]
+        draw(participants=participants, teams=teams, delay=0)
+
+
+def test_draw_too_few_participants_is_ok():
+    participants = ["Jim"]
+    teams = ["Bengals", "Bills"]
+    result = draw(participants=participants, teams=teams, delay=0)
+    assert len(result) == 1
+    assert next(iter(result)) == "Jim"
+
+
 def test_draw_command(temp_teams_txt_file: Path, temp_participants_txt_file: Path):
     runner = CliRunner()
     result = runner.invoke(
@@ -31,22 +46,7 @@ def test_draw_command(temp_teams_txt_file: Path, temp_participants_txt_file: Pat
     assert "Jim" in result.output
 
 
-def test_too_few_teams_raises_error():
-    with pytest.raises(ValueError):
-        participants = ["Harold", "Jim"]
-        teams = ["Bengals"]
-        draw(participants=participants, teams=teams, delay=0)
-
-
-def test_too_few_participants_is_ok():
-    participants = ["Jim"]
-    teams = ["Bengals", "Bills"]
-    result = draw(participants=participants, teams=teams, delay=0)
-    assert len(result) == 1
-    assert next(iter(result)) == "Jim"
-
-
-def test_file_does_not_exist_raises_error():
+def test_draw_command_file_does_not_exist_raises_error():
     runner = CliRunner()
     result = runner.invoke(
         draw_command,
@@ -57,7 +57,7 @@ def test_file_does_not_exist_raises_error():
     assert "File 'doesnotexist.txt' does not exist" in result.output
 
 
-def test_invalid_file_suffix_raises_error(temp_py_file: Path):
+def test_draw_command_invalid_file_suffix_raises_error(temp_py_file: Path):
     runner = CliRunner()
     result = runner.invoke(
         draw_command,

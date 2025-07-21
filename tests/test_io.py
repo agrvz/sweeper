@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 
 import pytest
@@ -8,6 +9,8 @@ from sweeper.io import (
     load_csv_rows_as_lists,
     load_csv_rows_as_dicts,
     load_csv,
+    write_result_to_csv,
+    write_result_to_json,
 )
 
 
@@ -124,3 +127,30 @@ def test_load_csv_with_column_name_and_index_raises_error(
             column_name=column_name,
             column_index=column_index,
         )
+
+
+def test_write_result_to_csv(tmp_path: Path):
+    result = {
+        "Harold": "Chiefs",
+        "Jim": "Bengals",
+        "Margaret": "Bills",
+    }
+    file = tmp_path / "test_result.csv"
+    write_result_to_csv(result=result, path=file)
+    assert (
+        file.read_text()
+        == "participant,team\nHarold,Chiefs\nJim,Bengals\nMargaret,Bills\n"
+    )
+
+
+def test_write_result_to_json(tmp_path: Path):
+    result = {
+        "Harold": "Chiefs",
+        "Jim": "Bengals",
+        "Margaret": "Bills",
+    }
+    file = tmp_path / "test_result.json"
+    write_result_to_json(result=result, path=file)
+    with open(file, "r") as in_file:
+        file_data = json.load(in_file)
+        assert file_data == result

@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 
 
@@ -75,3 +76,23 @@ def load_csv(
             raise IndexError(
                 f"Column index {column_index} out of range for one or more rows in file."
             )
+
+
+def write_result_to_csv(result: dict, path: Path) -> None:
+    """
+    Write result dictionary to CSV file.
+    """
+    with open(path, "w") as csv_file:
+        field_names = ["participant", "team"]
+        writer = csv.DictWriter(csv_file, fieldnames=field_names)
+        writer.writeheader()
+        for participant, team in result.items():
+            writer.writerow({"participant": participant, "team": team})
+
+
+def write_result_to_json(result: dict, path: Path) -> None:
+    """
+    Write result dictionary to JSON file.
+    """
+    with open(path, "w") as jsonfile:
+        json.dump(result, jsonfile, indent=4)
