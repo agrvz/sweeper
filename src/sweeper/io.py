@@ -55,7 +55,7 @@ def load_csv(
     if not column_name and not column_index:
         raise ValueError("You must pass either column_name or column_index.")
 
-    if column_name and column_index:
+    if column_name and column_index is not None:
         raise ValueError("You must pass either column_name or column_index, not both.")
 
     if column_name:
@@ -72,6 +72,6 @@ def load_csv(
         try:
             return [row[column_index] for row in rows]
         except IndexError:
-            raise ValueError(
+            raise IndexError(
                 f"Column index {column_index} out of range for one or more rows in file."
             )
