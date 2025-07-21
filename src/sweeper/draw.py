@@ -6,7 +6,12 @@ from pathlib import Path
 import click
 from prettytable import PrettyTable
 
-from sweeper.io import get_lines_from_file, load_csv
+from sweeper.io import (
+    get_lines_from_file,
+    load_csv,
+    write_result_to_csv,
+    write_result_to_json,
+)
 
 
 def draw(participants: list, teams: list, delay: float = 1.0) -> dict:
@@ -55,7 +60,7 @@ def draw(participants: list, teams: list, delay: float = 1.0) -> dict:
 @click.option(
     "--teams-column",
     type=str,
-    help="Column name or index for teams file, if a CSV file",
+    help="Column name or index to use from teams file, if a CSV file",
 )
 @click.option(
     "--participants",
@@ -65,13 +70,24 @@ def draw(participants: list, teams: list, delay: float = 1.0) -> dict:
 @click.option(
     "--participants-column",
     type=str,
-    help="Column name or index for participants file, if a CSV file",
+    help="Column name or index to use from participants file, if a CSV file",
 )
 @click.option(
     "--delay", default=1, type=float, help="Delay between draw rounds in seconds"
 )
+@click.option(
+    "--output-file",
+    type=click.Path(exists=False, writable=True, dir_okay=False),
+    help="File path to write results to. Either .csv or .json supported",
+)
 def draw_command(
-    *, teams: Path, teams_column, participants: Path, participants_column, delay: float
+    *,
+    teams: Path,
+    teams_column: str | int,
+    participants: Path,
+    participants_column: str | int,
+    delay: float,
+    output_file: Path,
 ) -> dict:
     """
     Start a sweepstake draw. Allocate one team per participant.
@@ -79,6 +95,8 @@ def draw_command(
 
     teams = Path(teams)
     participants = Path(participants)
+    if output_file:
+        output_file = Path(output_file)
 
     if teams.suffix == ".csv":
         try:
@@ -106,8 +124,19 @@ def draw_command(
     else:
         raise ValueError("Participants file must be a .csv or .txt file.")
 
-    return draw(
+    results = draw(
         participants=participants_list,
         teams=teams_list,
         delay=delay,
     )
+
+    if output_file is None:
+        return results
+    elif output_file.suffix == ".csv":
+        write_result_to_csv(result=results, path=output_file)
+    elif output_file.suffix == ".json":
+        write_result_to_json(result=results, path=output_file)
+    else:
+        raise ValueError("Output file must be a .csv or .json file.")
+
+    return None

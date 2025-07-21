@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -35,9 +36,9 @@ def test_draw_command(temp_teams_txt_file: Path, temp_participants_txt_file: Pat
         draw_command,
         [
             "--teams",
-            str(temp_teams_txt_file),
+            temp_teams_txt_file,
             "--participants",
-            str(temp_participants_txt_file),
+            temp_participants_txt_file,
             "--delay",
             "0",
         ],
@@ -61,8 +62,83 @@ def test_draw_command_invalid_file_suffix_raises_error(temp_py_file: Path):
     runner = CliRunner()
     result = runner.invoke(
         draw_command,
-        ["--teams", str(temp_py_file), "--participants", str(temp_py_file)],
+        ["--teams", temp_py_file, "--participants", temp_py_file],
     )
     assert result.exit_code != 0
     assert isinstance(result.exception, ValueError)
     assert "file must be a .csv or .txt file." in result.exception.args[0]
+
+
+def test_draw_command_creates_valid_output_csv_file(
+    temp_teams_txt_file: Path,
+    temp_participants_txt_file: Path,
+    temp_output_csv_file: Path,
+):
+    runner = CliRunner()
+    result = runner.invoke(
+        draw_command,
+        [
+            "--teams",
+            temp_teams_txt_file,
+            "--participants",
+            temp_participants_txt_file,
+            "--delay",
+            0,
+            "--output-file",
+            temp_output_csv_file,
+        ],
+    )
+    assert result.exit_code == 0
+    file_data = temp_output_csv_file.read_text()
+    assert "Harold" in file_data
+    assert "Jim" in file_data
+    assert "Margaret" in file_data
+
+
+def test_draw_command_creates_valid_output_json_file(
+    temp_teams_txt_file: Path,
+    temp_participants_txt_file: Path,
+    temp_output_json_file: Path,
+):
+    runner = CliRunner()
+    result = runner.invoke(
+        draw_command,
+        [
+            "--teams",
+            temp_teams_txt_file,
+            "--participants",
+            temp_participants_txt_file,
+            "--delay",
+            0,
+            "--output-file",
+            temp_output_json_file,
+        ],
+    )
+    assert result.exit_code == 0
+    with open(temp_output_json_file, "r") as in_file:
+        file_data = json.load(in_file)
+        assert isinstance(file_data, dict)
+        assert len(file_data) == 3
+        assert list(file_data.keys()) == ["Harold", "Jim", "Margaret"]
+
+
+def test_draw_command_invalid_output_file_suffix_raises_error(
+    temp_teams_txt_file: Path, temp_participants_txt_file: Path, temp_py_file: Path
+):
+    runner = CliRunner()
+    result = runner.invoke(
+        draw_command,
+        [
+            "--teams",
+            temp_teams_txt_file,
+            "--participants",
+            temp_participants_txt_file,
+            "--delay",
+            0,
+            "--output-file",
+            temp_py_file,
+        ],
+    )
+    assert result.exit_code != 0
+    assert isinstance(result.exception, ValueError)
+    assert "Output file must be a .csv or .json file." in result.exception.args[0]

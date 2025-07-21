@@ -50,3 +50,17 @@ def temp_participants_csv_file(tmp_path: Path):
     temp_file = tmp_path / "participants_csv_file.csv"
     temp_file.write_text("id,name\n1,Harold\n2,Jim\n3,Margaret")
     yield temp_file
+
+
+@pytest.fixture
+def temp_output_csv_file(tmp_path: Path):
+    temp_file = tmp_path / "output_csv_file.csv"
+    temp_file.write_text("")
+    yield temp_file
+
+
+@pytest.fixture
+def temp_output_json_file(tmp_path: Path):
+    temp_file = tmp_path / "output_json_file.json"
+    temp_file.write_text("{}")
+    yield temp_file
