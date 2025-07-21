@@ -18,3 +18,8 @@ Or you can use the column index:
 ```shell
 uv run sweep draw --teams teams.csv --teams-column 1 --participants participants.csv --participants-column 1 --delay 0.1
 ```
+
+Optionally specify an output file to write results to. Format can either be `.csv`. or `.json`:
+```shell
+uv run sweep draw --teams teams.csv --teams-column 1 --participants participants.csv --participants-column 1 --delay 0.1 --output-file results.csv
+```
