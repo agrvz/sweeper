@@ -138,8 +138,7 @@ def test_write_result_to_csv(tmp_path: Path):
     file = tmp_path / "test_result.csv"
     write_result_to_csv(result=result, path=file)
     assert (
-        file.read_text()
-        == "entrant,pick\nHarold,Chiefs\nJim,Bengals\nMargaret,Bills\n"
+        file.read_text() == "entrant,pick\nHarold,Chiefs\nJim,Bengals\nMargaret,Bills\n"
     )
 
 

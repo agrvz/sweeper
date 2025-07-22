@@ -105,12 +105,15 @@ def draw(entrants: list, picks: list, delay: float = 1.0, debug: bool = False) -
     help="Column name or index to use from entrants file, if a CSV file",
 )
 @click.option(
-    "--delay", default=1, type=float, help="Delay between draw rounds in seconds"
+    "--delay",
+    default=1,
+    type=float,
+    help="Delay between draw rounds in seconds. Default is 1.0",
 )
 @click.option(
     "--output-file",
     type=click.Path(exists=False, writable=True, dir_okay=False),
-    help="File path to write results to. Either .csv or .json supported",
+    help="File path to write results to. CSV or JSON supported. If not passed, results are printed to terminal and no file is written",
 )
 def draw_command(
     *,

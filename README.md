@@ -14,16 +14,43 @@ View `sweep` CLI help:
 uv run sweep --help
 ```
 
-Alternatively, to run without needing `uv run`, activate the virtual environment first:
+Or, to run without needing `uv run`, activate the virtual environment first:
 ```shell
 source .venv/bin/activate
 ```
 
-Then you can run `sweep` commands directly:
+Then run `sweep` commands directly:
 ```shell
 sweep --help
 ```
 
+## Commands
+
+### draw
+
+Command to create and start a sweepstake draw. Allocates one pick per entrant. For example, picks might be countries in the World Cup, and entrants might be a list of friends' names.
+
+View help for `draw` command:
+```shell
+uv run sweep draw --help
+```
+
+Run a sweepstake draw:
+```shell
+uv run sweep draw --picks picks.txt --entrants entrants.txt
+```
+
+## Developing
+
+Run unit tests:
+```shell
+uv run pytest -v
+```
+
+Format code:
+```shell
+uv run ruff format .
+```
 
 ## Examples
 
