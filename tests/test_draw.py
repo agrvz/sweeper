@@ -44,6 +44,22 @@ def test_draw_picks_are_not_unique():
         result = draw(entrants=entrants, picks=picks, delay=0)
 
 
+def test_draw_debug_mode():
+    entrants = ["Harold", "Jim", "Margaret", "John", "Tony", "Gordon"]
+    picks = ["Bengals", "Bills", "Chiefs", "Dolphins", "Eagles", "Falcons"]
+    expected_result = {
+        "Harold": "Bengals",
+        "Jim": "Bills",
+        "Margaret": "Chiefs",
+        "John": "Dolphins",
+        "Tony": "Eagles",
+        "Gordon": "Falcons",
+    }
+    for _ in range(100):
+        result = draw(entrants=entrants, picks=picks, delay=0, debug=True)
+        assert result == expected_result
+
+
 def test_draw_command(temp_picks_txt_file: Path, temp_entrants_txt_file: Path):
     runner = CliRunner()
     result = runner.invoke(

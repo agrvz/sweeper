@@ -18,12 +18,12 @@ from sweeper.io import (
 logger = logging.getLogger(__name__)
 
 
-def draw(entrants: list, picks: list, delay: float = 1.0) -> dict:
+def draw(entrants: list, picks: list, delay: float = 1.0, debug: bool = False) -> dict:
     """
     Draw a random pick for each entrant and return a dictionary mapping
     entrants to picks. Does not modify original lists in place.
     """
-    logger.debug("Running draw")
+    logger.debug(f"Running draw with debug={debug}")
     logger.debug(f"({len(entrants)}) {entrants=}")
     logger.debug(f"({len(picks)}) {picks=}")
     logger.debug(f"{delay=}")
@@ -50,8 +50,12 @@ def draw(entrants: list, picks: list, delay: float = 1.0) -> dict:
 
     for index, entrant in enumerate(entrants_copy):
         logger.debug(f"Drawing for entrant {index + 1}: {entrant}")
-        # Remove a random pick from the list
-        pick = picks_copy.pop(random.randint(0, len(picks_copy) - 1))
+        if debug:
+            # If debug mode is on, assign picks in order
+            pick = picks_copy[index]
+        else:
+            # Remove a random pick from the list
+            pick = picks_copy.pop(random.randint(0, len(picks_copy) - 1))
 
         result[entrant] = pick
         logger.debug(f"Assigned pick {pick} to entrant {entrant}")
