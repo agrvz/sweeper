@@ -66,7 +66,7 @@ def test_draw_command_invalid_file_suffix_raises_error(temp_py_file: Path):
     )
     assert result.exit_code != 0
     assert isinstance(result.exception, ValueError)
-    assert "file must be a .csv or .txt file." in result.exception.args[0]
+    assert "file must be a .csv or .txt file" in result.exception.args[0]
 
 
 def test_draw_command_creates_valid_output_csv_file(
@@ -141,4 +141,4 @@ def test_draw_command_invalid_output_file_suffix_raises_error(
     )
     assert result.exit_code != 0
     assert isinstance(result.exception, ValueError)
-    assert "Output file must be a .csv or .json file." in result.exception.args[0]
+    assert "Output file must be a .csv or .json file" in result.exception.args[0]

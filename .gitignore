@@ -15,3 +15,7 @@ wheels/
 # Text files
 *.txt
 *.csv
+
+# Log files
+logs/
+*.log
