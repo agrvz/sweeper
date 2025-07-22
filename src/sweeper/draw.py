@@ -29,8 +29,19 @@ def draw(entrants: list, picks: list, delay: float = 1.0) -> dict:
     logger.debug(f"{delay=}")
 
     result = {}
+
+    if len(set(entrants)) < len(entrants):
+        message = f"Entrants must be unique but found duplicates: {entrants}"
+        logger.error(message)
+        raise ValueError(message)
+
+    if len(set(picks)) < len(picks):
+        message = f"Picks must be unique but found duplicates: {picks}"
+        logger.error(message)
+        raise ValueError(message)
+
     if len(picks) < len(entrants):
-        message = f"There are not enough picks to give every entrant a pick"
+        message = f"There are not enough picks ({len(picks)}) to give every entrant ({len(entrants)}) a pick"
         logger.error(message)
         raise ValueError(message)
 
@@ -143,19 +154,11 @@ def draw_command(
         try:
             logger.debug(f"Entrants file suffix is .csv")
             int(entrants_column)
-            logger.debug(
-                f"entrants_column is an integer - loading csv by column index"
-            )
-            entrants_list = load_csv(
-                filepath=entrants, column_index=entrants_column
-            )
+            logger.debug(f"entrants_column is an integer - loading csv by column index")
+            entrants_list = load_csv(filepath=entrants, column_index=entrants_column)
         except ValueError:
-            logger.debug(
-                f"entrants_column is a string - loading csv by column name"
-            )
-            entrants_list = load_csv(
-                filepath=entrants, column_name=entrants_column
-            )
+            logger.debug(f"entrants_column is a string - loading csv by column name")
+            entrants_list = load_csv(filepath=entrants, column_name=entrants_column)
     elif entrants.suffix == ".txt":
         logger.debug(f"Entrants file suffix is .txt")
         entrants_list = get_lines_from_file(filepath=entrants)

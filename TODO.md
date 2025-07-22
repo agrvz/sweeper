@@ -13,3 +13,4 @@
 - [x] Audit log to show inputs, outputs, and process
 - [ ] Configurable to either choose picks or entrants in order, or neither
 - [ ] Decide whether delay when drawing is configurable, and whether delay should be artificial (draw has taken place immediately, only the printing of each round is delayed) or real (program genuinely waits for X seconds between draw rounds)
+- [x] Enforce uniqueness in picks and entrants

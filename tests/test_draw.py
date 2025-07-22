@@ -30,6 +30,20 @@ def test_draw_too_few_entrants_is_ok():
     assert next(iter(result)) == "Jim"
 
 
+def test_draw_entrants_are_not_unique():
+    entrants = ["Harold", "Jim", "Harold"]
+    picks = ["Bengals", "Bills", "Chiefs"]
+    with pytest.raises(ValueError):
+        result = draw(entrants=entrants, picks=picks, delay=0)
+
+
+def test_draw_picks_are_not_unique():
+    entrants = ["Harold", "Jim", "Margaret"]
+    picks = ["Bengals", "Bills", "Bengals"]
+    with pytest.raises(ValueError):
+        result = draw(entrants=entrants, picks=picks, delay=0)
+
+
 def test_draw_command(temp_picks_txt_file: Path, temp_entrants_txt_file: Path):
     runner = CliRunner()
     result = runner.invoke(
