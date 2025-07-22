@@ -83,11 +83,11 @@ def write_result_to_csv(result: dict, path: Path) -> None:
     Write result dictionary to CSV file.
     """
     with open(path, "w") as csv_file:
-        field_names = ["participant", "team"]
+        field_names = ["entrant", "pick"]
         writer = csv.DictWriter(csv_file, fieldnames=field_names)
         writer.writeheader()
-        for participant, team in result.items():
-            writer.writerow({"participant": participant, "team": team})
+        for entrant, pick in result.items():
+            writer.writerow({"entrant": entrant, "pick": pick})
 
 
 def write_result_to_json(result: dict, path: Path) -> None:

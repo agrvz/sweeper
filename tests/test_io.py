@@ -78,34 +78,34 @@ def test_load_csv_rows_as_dicts_empty_file_raises_error(temp_csv_file):
         rows = load_csv_rows_as_dicts(temp_csv_file)
 
 
-def test_load_csv_by_column_name(temp_teams_csv_file):
-    teams_list = load_csv(filepath=temp_teams_csv_file, column_name="name")
-    assert teams_list == ["Bengals", "Bills", "Chiefs"]
+def test_load_csv_by_column_name(temp_picks_csv_file):
+    picks_list = load_csv(filepath=temp_picks_csv_file, column_name="name")
+    assert picks_list == ["Bengals", "Bills", "Chiefs"]
 
 
-def test_load_csv_by_column_name_invalid_raises_error(temp_teams_csv_file):
+def test_load_csv_by_column_name_invalid_raises_error(temp_picks_csv_file):
     with pytest.raises(ValueError, match="not found in one or more rows in file"):
-        teams_list = load_csv(filepath=temp_teams_csv_file, column_name="doesnotexist")
+        picks_list = load_csv(filepath=temp_picks_csv_file, column_name="doesnotexist")
 
 
-def test_load_csv_by_column_index(temp_teams_csv_file):
-    teams_list = load_csv(filepath=temp_teams_csv_file, column_index=1)
-    assert teams_list == ["Bengals", "Bills", "Chiefs"]
+def test_load_csv_by_column_index(temp_picks_csv_file):
+    picks_list = load_csv(filepath=temp_picks_csv_file, column_index=1)
+    assert picks_list == ["Bengals", "Bills", "Chiefs"]
 
 
-def test_load_csv_by_column_index_invalid(temp_teams_csv_file):
+def test_load_csv_by_column_index_invalid(temp_picks_csv_file):
     with pytest.raises(IndexError, match="out of range for one or more rows in file"):
-        teams_list = load_csv(filepath=temp_teams_csv_file, column_index=5)
+        picks_list = load_csv(filepath=temp_picks_csv_file, column_index=5)
 
 
 def test_load_csv_invalid_path_raises_error():
     with pytest.raises(FileNotFoundError):
-        teams_list = load_csv(filepath="path/that/does/not/exist", column_index=1)
+        picks_list = load_csv(filepath="path/that/does/not/exist", column_index=1)
 
 
 def test_load_csv_empty_file_raises_error(temp_csv_file):
     with pytest.raises(ValueError, match="is empty"):
-        teams_list = load_csv(filepath=temp_csv_file, column_index=1)
+        picks_list = load_csv(filepath=temp_csv_file, column_index=1)
 
 
 @pytest.mark.parametrize(
@@ -117,13 +117,13 @@ def test_load_csv_empty_file_raises_error(temp_csv_file):
     ],
 )
 def test_load_csv_with_column_name_and_index_raises_error(
-    temp_teams_csv_file, column_name, column_index
+    temp_picks_csv_file, column_name, column_index
 ):
     with pytest.raises(
         ValueError, match="You must pass either column_name or column_index, not both."
     ):
         load_csv(
-            filepath=temp_teams_csv_file,
+            filepath=temp_picks_csv_file,
             column_name=column_name,
             column_index=column_index,
         )
@@ -139,7 +139,7 @@ def test_write_result_to_csv(tmp_path: Path):
     write_result_to_csv(result=result, path=file)
     assert (
         file.read_text()
-        == "participant,team\nHarold,Chiefs\nJim,Bengals\nMargaret,Bills\n"
+        == "entrant,pick\nHarold,Chiefs\nJim,Bengals\nMargaret,Bills\n"
     )
 
 

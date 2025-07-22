@@ -18,48 +18,48 @@ from sweeper.io import (
 logger = logging.getLogger(__name__)
 
 
-def draw(participants: list, teams: list, delay: float = 1.0) -> dict:
+def draw(entrants: list, picks: list, delay: float = 1.0) -> dict:
     """
-    Draw a random team for each participant and return a dictionary mapping
-    participants to teams. Does not modify original lists in place.
+    Draw a random pick for each entrant and return a dictionary mapping
+    entrants to picks. Does not modify original lists in place.
     """
     logger.debug("Running draw")
-    logger.debug(f"({len(participants)}) {participants=}")
-    logger.debug(f"({len(teams)}) {teams=}")
+    logger.debug(f"({len(entrants)}) {entrants=}")
+    logger.debug(f"({len(picks)}) {picks=}")
     logger.debug(f"{delay=}")
 
     result = {}
-    if len(teams) < len(participants):
-        message = f"There are not enough teams to give every participant a team"
+    if len(picks) < len(entrants):
+        message = f"There are not enough picks to give every entrant a pick"
         logger.error(message)
         raise ValueError(message)
 
-    teams_copy = deepcopy(teams)
-    participants_copy = deepcopy(participants)
+    picks_copy = deepcopy(picks)
+    entrants_copy = deepcopy(entrants)
 
-    for index, participant in enumerate(participants_copy):
-        logger.debug(f"Drawing for participant {index + 1}: {participant}")
-        # Remove a random team from the list
-        team = teams_copy.pop(random.randint(0, len(teams_copy) - 1))
+    for index, entrant in enumerate(entrants_copy):
+        logger.debug(f"Drawing for entrant {index + 1}: {entrant}")
+        # Remove a random pick from the list
+        pick = picks_copy.pop(random.randint(0, len(picks_copy) - 1))
 
-        result[participant] = team
-        logger.debug(f"Assigned team {team} to participant {participant}")
-        print(f"Participant {index + 1}: {participant}")
+        result[entrant] = pick
+        logger.debug(f"Assigned pick {pick} to entrant {entrant}")
+        print(f"Entrant {index + 1}: {entrant}")
         time.sleep(delay)
         print("\nDrawing...\n")
         time.sleep(delay)
-        print(f"{participant} ... draws ... {team}\n")
+        print(f"{entrant} ... draws ... {pick}\n")
         time.sleep(delay * 2)
         print("------------------------------------\n")
 
-    logger.debug(f"Undrawn teams ({len(teams_copy)}): {teams_copy}")
-    print(f"Undrawn teams ({len(teams_copy)}): {teams_copy}\n")
+    logger.debug(f"Undrawn picks ({len(picks_copy)}): {picks_copy}")
+    print(f"Undrawn picks ({len(picks_copy)}): {picks_copy}\n")
     time.sleep(delay)
 
-    table = PrettyTable(["Participant", "Team"])
+    table = PrettyTable(["Entrant", "Pick"])
     for key, val in result.items():
         table.add_row([key, val])
-    table.sortby = "Participant"
+    table.sortby = "Entrant"
 
     logger.debug(f"Results table\n{table}")
     print(table)
@@ -70,24 +70,24 @@ def draw(participants: list, teams: list, delay: float = 1.0) -> dict:
 
 @click.command()
 @click.option(
-    "--teams",
+    "--picks",
     type=click.Path(exists=True, readable=True, dir_okay=False),
-    help="Path to file containing list of teams",
+    help="Path to file containing list of picks",
 )
 @click.option(
-    "--teams-column",
+    "--picks-column",
     type=str,
-    help="Column name or index to use from teams file, if a CSV file",
+    help="Column name or index to use from picks file, if a CSV file",
 )
 @click.option(
-    "--participants",
+    "--entrants",
     type=click.Path(exists=True, readable=True, dir_okay=False),
-    help="Path to file containing list of participants",
+    help="Path to file containing list of entrants",
 )
 @click.option(
-    "--participants-column",
+    "--entrants-column",
     type=str,
-    help="Column name or index to use from participants file, if a CSV file",
+    help="Column name or index to use from entrants file, if a CSV file",
 )
 @click.option(
     "--delay", default=1, type=float, help="Delay between draw rounds in seconds"
@@ -99,78 +99,78 @@ def draw(participants: list, teams: list, delay: float = 1.0) -> dict:
 )
 def draw_command(
     *,
-    teams: Path,
-    teams_column: str | int,
-    participants: Path,
-    participants_column: str | int,
+    picks: Path,
+    picks_column: str | int,
+    entrants: Path,
+    entrants_column: str | int,
     delay: float,
     output_file: Path,
 ) -> dict:
     """
-    Start a sweepstake draw. Allocate one team per participant.
+    Start a sweepstake draw. Allocate one pick per entrant.
     """
 
     logger.debug("START: Running draw")
-    logger.debug(f"{teams=}")
-    logger.debug(f"{teams_column=}")
-    logger.debug(f"{participants=}")
-    logger.debug(f"{participants_column=}")
+    logger.debug(f"{picks=}")
+    logger.debug(f"{picks_column=}")
+    logger.debug(f"{entrants=}")
+    logger.debug(f"{entrants_column=}")
     logger.debug(f"{delay=}")
     logger.debug(f"{output_file=}")
 
-    teams = Path(teams)
-    participants = Path(participants)
+    picks = Path(picks)
+    entrants = Path(entrants)
     if output_file:
         output_file = Path(output_file)
 
-    if teams.suffix == ".csv":
-        logger.debug(f"Teams file suffix is .csv")
+    if picks.suffix == ".csv":
+        logger.debug(f"Picks file suffix is .csv")
         try:
-            int(teams_column)
-            logger.debug(f"teams_column is an integer - loading csv by column index")
-            teams_list = load_csv(filepath=teams, column_index=int(teams_column))
+            int(picks_column)
+            logger.debug(f"picks_column is an integer - loading csv by column index")
+            picks_list = load_csv(filepath=picks, column_index=int(picks_column))
         except ValueError:
-            logger.debug(f"teams_column is a string - loading csv by column name")
-            teams_list = load_csv(filepath=teams, column_name=teams_column)
-    elif teams.suffix == ".txt":
-        logger.debug(f"Teams file suffix is .txt")
-        teams_list = get_lines_from_file(filepath=teams)
+            logger.debug(f"picks_column is a string - loading csv by column name")
+            picks_list = load_csv(filepath=picks, column_name=picks_column)
+    elif picks.suffix == ".txt":
+        logger.debug(f"Picks file suffix is .txt")
+        picks_list = get_lines_from_file(filepath=picks)
     else:
-        logger.error(f"Teams file must be a .csv or .txt file, got {teams.suffix}")
-        raise ValueError(f"Teams file must be a .csv or .txt file, got {teams.suffix}")
+        logger.error(f"Picks file must be a .csv or .txt file, got {picks.suffix}")
+        raise ValueError(f"Picks file must be a .csv or .txt file, got {picks.suffix}")
 
-    if participants.suffix == ".csv":
+    if entrants.suffix == ".csv":
         try:
-            logger.debug(f"Participants file suffix is .csv")
-            int(participants_column)
+            logger.debug(f"Entrants file suffix is .csv")
+            int(entrants_column)
             logger.debug(
-                f"participants_column is an integer - loading csv by column index"
+                f"entrants_column is an integer - loading csv by column index"
             )
-            participants_list = load_csv(
-                filepath=participants, column_index=participants_column
+            entrants_list = load_csv(
+                filepath=entrants, column_index=entrants_column
             )
         except ValueError:
             logger.debug(
-                f"participants_column is a string - loading csv by column name"
+                f"entrants_column is a string - loading csv by column name"
             )
-            participants_list = load_csv(
-                filepath=participants, column_name=participants_column
+            entrants_list = load_csv(
+                filepath=entrants, column_name=entrants_column
             )
-    elif participants.suffix == ".txt":
-        logger.debug(f"Participants file suffix is .txt")
-        participants_list = get_lines_from_file(filepath=participants)
+    elif entrants.suffix == ".txt":
+        logger.debug(f"Entrants file suffix is .txt")
+        entrants_list = get_lines_from_file(filepath=entrants)
     else:
         logger.error(
-            f"Participants file must be a .csv or .txt file, got {participants.suffix}"
+            f"Entrants file must be a .csv or .txt file, got {entrants.suffix}"
         )
         raise ValueError(
-            f"Participants file must be a .csv or .txt file, got {participants.suffix}"
+            f"Entrants file must be a .csv or .txt file, got {entrants.suffix}"
         )
 
     logger.debug("Calling draw function")
     results = draw(
-        participants=participants_list,
-        teams=teams_list,
+        entrants=entrants_list,
+        picks=picks_list,
         delay=delay,
     )
 
