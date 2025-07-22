@@ -1,0 +1,31 @@
+name: test
+
+on:
+  pull_request:
+    types: [ready_for_review]
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  unit-test:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        # v6
+        uses: astral-sh/setup-uv@7edac99f961f18b581bbd960d59d049f04c0002f
+        with:
+          version: "0.8.2"
+
+      - name: Install Python
+        run: uv python install
+
+      - name: Install project
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run tests
+        run: uv run pytest -v
