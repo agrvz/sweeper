@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 def draw(
     entrants: list,
     picks: list,
+    draw_order: str = "entrants",
     delay: float = 1.0,
     plain: bool = False,
     debug: bool = False,
@@ -30,19 +31,25 @@ def draw(
     Does not modify original lists in place.
 
     Arguments:
-        - entrants (list): List of entrants (must be unique). entrants >= picks
-                           must be true.
-        - picks (list):    List of picks (must be unique)
-        - delay (float):   Delay in seconds between draws (default is 1.0)
-        - plain (bool):    If True, no terminal output is printed except the final result
-        - debug (bool):    If True, picks are assigned in deterministic order (essentially
-                           they are zipped together) instead of being chosen randomly.
-                           Default is False.
+        - entrants (list):  List of entrants (must be unique). entrants >= picks
+                            must be true.
+        - picks (list):     List of picks (must be unique)
+        - draw_order (str): Draw in order of entrants list (i.e. 'entrant 1 gets...'),
+                            picks list (i.e. 'pick 1 goes to...'), or shuffled (i.e. 
+                            shuffle entrants, then 'entrant 1 gets...').
+                            Options: "entrants", "picks", "shuffle". Default is "entrant".
+        - delay (float):    Delay in seconds between draws (default is 1.0)
+        - plain (bool):     If True, no terminal output is printed except the final result
+        - debug (bool):     If True, picks are assigned in deterministic order (essentially
+                            they are zipped together) instead of being chosen randomly.
+                            Default is False.
     """
     logger.debug(f"Running draw with debug={debug}")
     logger.debug(f"({len(entrants)}) {entrants=}")
     logger.debug(f"({len(picks)}) {picks=}")
+    logger.debug(f"{draw_order=}")
     logger.debug(f"{delay=}")
+    logger.debug(f"{plain=}")
 
     if len(set(entrants)) < len(entrants):
         message = f"Entrants must be unique but found duplicates: {entrants}"
@@ -55,45 +62,83 @@ def draw(
         raise ValueError(message)
 
     if len(picks) < len(entrants):
-        message = f"There are not enough picks ({len(picks)}) to give every entrant ({len(entrants)}) a pick"
+        message = f"There are not enough picks ({len(picks)}) to give all entrants ({len(entrants)}) a pick"
         logger.error(message)
         raise ValueError(message)
 
-    picks_copy = deepcopy(picks)
+    if draw_order not in ["entrants", "picks", "shuffle"]:
+        message = f"draw_order must be one of 'entrants', 'picks', or 'shuffle', got {draw_order}"
+        logger.error(message)
+        raise ValueError(message)
+
     entrants_copy = deepcopy(entrants)
+    picks_copy = deepcopy(picks)
+
+    if draw_order == "shuffle":
+        random.shuffle(entrants_copy)
 
     result = {}
     table = PrettyTable(["Entrant", "Pick"])
-    for index, entrant in enumerate(entrants_copy):
-        logger.debug(f"Drawing for entrant {index + 1}: {entrant}")
-        if debug:
-            # If debug mode is on, assign picks in order
-            pick = picks_copy[index]
-        else:
-            # Remove a random pick from the list
-            pick = picks_copy.pop(random.randint(0, len(picks_copy) - 1))
 
-        result[entrant] = pick
-        logger.debug(f"Assigned pick {pick} to entrant {entrant}")
-        table.add_row([entrant, pick])
+    # Draw in order of entrants
+    if draw_order in ["entrants", "shuffle"]:
+        for index, entrant in enumerate(entrants_copy):
+            logger.debug(f"Drawing for entrant {index + 1}: {entrant}")
+            if debug:
+                # If debug mode is on, assign picks in order
+                pick = picks_copy[index]
+            else:
+                # Remove a random pick from the list
+                pick = picks_copy.pop(random.randint(0, len(picks_copy) - 1))
 
-    table.sortby = "Entrant"
+            result[entrant] = pick
+            logger.debug(f"Assigned pick {pick} to entrant {entrant}")
+            table.add_row([entrant, pick])
+    # Draw in order of picks
+    elif draw_order == "picks":
+        for index, pick in enumerate(picks_copy):
+            logger.debug(f"Drawing for pick {index + 1}: {pick}")
+            if debug:
+                # If debug mode is on, assign entrants in order
+                entrant = entrants_copy[index]
+            else:
+                # Remove a random entrant from the list
+                entrant = entrants_copy.pop(random.randint(0, len(entrants_copy) - 1))
+
+            result[entrant] = pick
+            logger.debug(f"Pick {pick} drawn by entrant {entrant}")
+            table.add_row([entrant, pick])
+    else:
+        message = f"draw_order must be one of 'entrants', 'picks', or 'shuffle', got {draw_order}"
+        logger.error(message)
+        raise ValueError(message)
+
+    undrawn_picks = [pick for pick in picks_copy if pick not in result.values()]
     logger.debug(f"Results table\n{table}")
-    logger.debug(f"Undrawn picks ({len(picks_copy)}): {picks_copy}")
+    logger.debug(f"Undrawn picks ({len(undrawn_picks)}): {undrawn_picks}")
     logger.debug("Draw complete")
 
     if not plain:
         # Print results to terminal
-        for index, (entrant, pick) in enumerate(result.items()):
-            print(f"Entrant {index + 1}: {entrant}")
-            time.sleep(delay)
-            print("\nDrawing...\n")
-            time.sleep(delay)
-            print(f"{entrant} ... draws ... {pick}\n")
-            time.sleep(delay * 2)
-            print("------------------------------------\n")
-
-        print(f"Undrawn picks ({len(picks_copy)}): {picks_copy}\n")
+        if draw_order in ["entrants", "shuffle"]:
+            for index, (entrant, pick) in enumerate(result.items()):
+                print(f"Entrant {index + 1}: {entrant}")
+                time.sleep(delay)
+                print("\nDrawing...\n")
+                time.sleep(delay)
+                print(f"{entrant} ... draws ... {pick}\n")
+                time.sleep(delay * 2)
+                print("------------------------------------\n")
+        elif draw_order == "picks":
+            for index, (entrant, pick) in enumerate(result.items()):
+                print(f"Pick {index + 1}: {pick}")
+                time.sleep(delay)
+                print("\nDrawing...\n")
+                time.sleep(delay)
+                print(f"{pick} ... drawn by ... {entrant}\n")
+                time.sleep(delay * 2)
+                print("------------------------------------\n")
+        print(f"Undrawn picks ({len(undrawn_picks)}): {undrawn_picks}\n")
         time.sleep(delay)
 
     print("\nDraw complete.\n")
@@ -123,6 +168,15 @@ def draw(
     help="Column name or index to use from entrants file, if a CSV file",
 )
 @click.option(
+    "--draw-order",
+    type=click.Choice(["entrants", "picks", "shuffle"], case_sensitive=False),
+    default="entrants",
+    help="Order to draw picks: 'entrants' (default), 'picks', or 'shuffle'. "
+    "Draw in order of entrants list (i.e. 'entrant 1 gets...'), "
+    "picks list (i.e. 'pick 1 goes to...'), "
+    "or in order of entrants, but shuffled.",
+)
+@click.option(
     "--delay",
     default=1,
     type=float,
@@ -137,17 +191,19 @@ def draw(
 @click.option(
     "--output-file",
     type=click.Path(exists=False, writable=True, dir_okay=False),
-    help="File path to write results to. CSV or JSON supported. If not passed, results are printed to terminal and no file is written",
+    help="File path to write results to. CSV or JSON supported. "
+    "If not passed, results are printed to terminal and no file is written",
 )
 def draw_command(
     *,
     picks: Path,
-    picks_column: str | int,
+    picks_column: str | int | None = None,
     entrants: Path,
-    entrants_column: str | int,
-    delay: float,
+    entrants_column: str | int | None = None,
+    draw_order: str = "entrants",
+    delay: float = 1.0,
     plain: bool = False,
-    output_file: Path,
+    output_file: Path | None = None,
 ) -> dict:
     """
     Start a sweepstake draw. Allocate one pick per entrant.
@@ -158,6 +214,7 @@ def draw_command(
     logger.debug(f"{picks_column=}")
     logger.debug(f"{entrants=}")
     logger.debug(f"{entrants_column=}")
+    logger.debug(f"{draw_order=}")
     logger.debug(f"{delay=}")
     logger.debug(f"{output_file=}")
 
@@ -206,6 +263,7 @@ def draw_command(
     results = draw(
         entrants=entrants_list,
         picks=picks_list,
+        draw_order=draw_order,
         delay=delay,
         plain=plain,
     )
