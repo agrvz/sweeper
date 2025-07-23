@@ -18,10 +18,24 @@ from sweeper.io import (
 logger = logging.getLogger(__name__)
 
 
-def draw(entrants: list, picks: list, delay: float = 1.0, debug: bool = False) -> dict:
+def draw(
+    entrants: list,
+    picks: list,
+    delay: float = 1.0,
+    debug: bool = False,
+) -> dict:
     """
-    Draw a random pick for each entrant and return a dictionary mapping
-    entrants to picks. Does not modify original lists in place.
+    Map one pick to each entrant. Return a dictionary mapping entrants to picks.
+    Does not modify original lists in place.
+
+    Arguments:
+        - entrants (list): List of entrants (must be unique). entrants >= picks 
+                           must be true.
+        - picks (list):    List of picks (must be unique)
+        - delay (float):   Delay in seconds between draws (default is 1.0)
+        - debug (bool):    If True, picks are assigned in deterministic order (essentially 
+                           they are zipped together) instead of being chosen randomly. 
+                           Default is False.
     """
     logger.debug(f"Running draw with debug={debug}")
     logger.debug(f"({len(entrants)}) {entrants=}")

@@ -103,7 +103,7 @@ Example:
 2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Undrawn picks (0): []
 2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Results table
 +-------------+--------+
-| Entrant |  Pick  |
+| Entrant     |  Pick  |
 +-------------+--------+
 |    Harold   | Ravens |
 |     Jim     | Bills  |
