@@ -22,6 +22,7 @@ def draw(
     entrants: list,
     picks: list,
     delay: float = 1.0,
+    plain: bool = False,
     debug: bool = False,
 ) -> dict:
     """
@@ -33,6 +34,7 @@ def draw(
                            must be true.
         - picks (list):    List of picks (must be unique)
         - delay (float):   Delay in seconds between draws (default is 1.0)
+        - plain (bool):    If True, no terminal output is printed except the final result
         - debug (bool):    If True, picks are assigned in deterministic order (essentially
                            they are zipped together) instead of being chosen randomly.
                            Default is False.
@@ -80,21 +82,22 @@ def draw(
     logger.debug(f"Undrawn picks ({len(picks_copy)}): {picks_copy}")
     logger.debug("Draw complete")
 
-    # Print results to terminal
-    for index, (entrant, pick) in enumerate(result.items()):
-        print(f"Entrant {index + 1}: {entrant}")
-        time.sleep(delay)
-        print("\nDrawing...\n")
-        time.sleep(delay)
-        print(f"{entrant} ... draws ... {pick}\n")
-        time.sleep(delay * 2)
-        print("------------------------------------\n")
+    if not plain:
+        # Print results to terminal
+        for index, (entrant, pick) in enumerate(result.items()):
+            print(f"Entrant {index + 1}: {entrant}")
+            time.sleep(delay)
+            print("\nDrawing...\n")
+            time.sleep(delay)
+            print(f"{entrant} ... draws ... {pick}\n")
+            time.sleep(delay * 2)
+            print("------------------------------------\n")
 
-    print(f"Undrawn picks ({len(picks_copy)}): {picks_copy}\n")
-    time.sleep(delay)
+        print(f"Undrawn picks ({len(picks_copy)}): {picks_copy}\n")
+        time.sleep(delay)
 
-    print(table)
     print("\nDraw complete.\n")
+    print(f"Results:\n{table}")
     return result
 
 
@@ -126,6 +129,12 @@ def draw(
     help="Delay between draw rounds in seconds. Default is 1.0",
 )
 @click.option(
+    "--plain",
+    is_flag=True,
+    default=False,
+    help="If set, no terminal output is printed except the final result",
+)
+@click.option(
     "--output-file",
     type=click.Path(exists=False, writable=True, dir_okay=False),
     help="File path to write results to. CSV or JSON supported. If not passed, results are printed to terminal and no file is written",
@@ -137,6 +146,7 @@ def draw_command(
     entrants: Path,
     entrants_column: str | int,
     delay: float,
+    plain: bool = False,
     output_file: Path,
 ) -> dict:
     """
@@ -197,6 +207,7 @@ def draw_command(
         entrants=entrants_list,
         picks=picks_list,
         delay=delay,
+        plain=plain,
     )
 
     if output_file is None:
