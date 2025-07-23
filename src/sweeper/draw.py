@@ -1,5 +1,6 @@
 import logging
 import random
+import sys
 import time
 from copy import deepcopy
 from pathlib import Path
@@ -208,15 +209,8 @@ def draw_command(
     """
     Start a sweepstake draw. Allocate one pick per entrant.
     """
-
     logger.debug("START: Running draw")
-    logger.debug(f"{picks=}")
-    logger.debug(f"{picks_column=}")
-    logger.debug(f"{entrants=}")
-    logger.debug(f"{entrants_column=}")
-    logger.debug(f"{draw_order=}")
-    logger.debug(f"{delay=}")
-    logger.debug(f"{output_file=}")
+    logger.debug(f"Running command: {sys.argv[1:]}")
 
     picks = Path(picks)
     entrants = Path(entrants)

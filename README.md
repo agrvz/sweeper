@@ -76,39 +76,36 @@ uv run sweep draw --picks picks.csv --picks-column 1 --entrants entrants.csv --e
 
 ## Auditing
 
-Logs are written to `logs/audit.log` for auditing purposes. Parameters used to generate the sweepstake are logged, as is each drawn round.
+Logs are written to `logs/audit.log` for auditing purposes. Arguments used to generate the sweepstake are logged, as is each drawn round.
 
 Example:
 ```log
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - START: Running draw
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - picks='picks.txt'
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - picks_column=None
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - entrants='entrants.txt'
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - entrants_column=None
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - delay=0.0
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - output_file='output.csv'
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Picks file suffix is .txt
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Entrants file suffix is .txt
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Calling draw function
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Running draw
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - (3) entrants=['Harold', 'Jim', 'Margaret']
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - (3) picks=['Chiefs', 'Ravens', 'Bills']
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - delay=0.0
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Drawing for entrant 1: Harold
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Assigned pick Ravens to entrant Harold
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Drawing for entrant 2: Jim
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Assigned pick Bills to entrant Jim
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Drawing for entrant 3: Margaret
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Assigned pick Chiefs to entrant Margaret
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Undrawn picks (0): []
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Results table
-+-------------+--------+
-| Entrant     |  Pick  |
-+-------------+--------+
-|    Harold   | Ravens |
-|     Jim     | Bills  |
-|   Margaret  | Chiefs |
-+-------------+--------+
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Draw complete
-2025-07-22 16:43:26 UTC - DEBUG    - sweeper.draw - Output file passed with .csv suffix - writing to file
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - START: Running draw
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Running command: ['draw', '--picks', 'picks.txt', '--entrants', 'entrants.txt', '--delay', '0.5']
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Picks file suffix is .txt
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Entrants file suffix is .txt
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Calling draw function
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Running draw with debug=False
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - (3) entrants=['Harold', 'Jim', 'Margaret']
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - (3) picks=['Chiefs', 'Ravens', 'Bills']
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - draw_order='entrants'
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - delay=0.5
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - plain=False
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Drawing for entrant 1: Harold
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Assigned pick Ravens to entrant Harold
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Drawing for entrant 2: Jim
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Assigned pick Bills to entrant Jim
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Drawing for entrant 3: Margaret
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Assigned pick Chiefs to entrant Margaret
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Results table
++----------+--------+
+| Entrant  |  Pick  |
++----------+--------+
+|  Harold  | Ravens |
+|   Jim    | Bills  |
+| Margaret | Chiefs |
++----------+--------+
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Undrawn picks (0): []
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Draw complete
+2025-07-23 23:06:31 UTC - DEBUG    - sweeper.draw - No output file specified - printing results
 ```
