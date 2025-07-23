@@ -29,20 +29,18 @@ def draw(
     Does not modify original lists in place.
 
     Arguments:
-        - entrants (list): List of entrants (must be unique). entrants >= picks 
+        - entrants (list): List of entrants (must be unique). entrants >= picks
                            must be true.
         - picks (list):    List of picks (must be unique)
         - delay (float):   Delay in seconds between draws (default is 1.0)
-        - debug (bool):    If True, picks are assigned in deterministic order (essentially 
-                           they are zipped together) instead of being chosen randomly. 
+        - debug (bool):    If True, picks are assigned in deterministic order (essentially
+                           they are zipped together) instead of being chosen randomly.
                            Default is False.
     """
     logger.debug(f"Running draw with debug={debug}")
     logger.debug(f"({len(entrants)}) {entrants=}")
     logger.debug(f"({len(picks)}) {picks=}")
     logger.debug(f"{delay=}")
-
-    result = {}
 
     if len(set(entrants)) < len(entrants):
         message = f"Entrants must be unique but found duplicates: {entrants}"
@@ -62,6 +60,8 @@ def draw(
     picks_copy = deepcopy(picks)
     entrants_copy = deepcopy(entrants)
 
+    result = {}
+    table = PrettyTable(["Entrant", "Pick"])
     for index, entrant in enumerate(entrants_copy):
         logger.debug(f"Drawing for entrant {index + 1}: {entrant}")
         if debug:
@@ -73,6 +73,15 @@ def draw(
 
         result[entrant] = pick
         logger.debug(f"Assigned pick {pick} to entrant {entrant}")
+        table.add_row([entrant, pick])
+
+    table.sortby = "Entrant"
+    logger.debug(f"Results table\n{table}")
+    logger.debug(f"Undrawn picks ({len(picks_copy)}): {picks_copy}")
+    logger.debug("Draw complete")
+
+    # Print results to terminal
+    for index, (entrant, pick) in enumerate(result.items()):
         print(f"Entrant {index + 1}: {entrant}")
         time.sleep(delay)
         print("\nDrawing...\n")
@@ -81,18 +90,10 @@ def draw(
         time.sleep(delay * 2)
         print("------------------------------------\n")
 
-    logger.debug(f"Undrawn picks ({len(picks_copy)}): {picks_copy}")
     print(f"Undrawn picks ({len(picks_copy)}): {picks_copy}\n")
     time.sleep(delay)
 
-    table = PrettyTable(["Entrant", "Pick"])
-    for key, val in result.items():
-        table.add_row([key, val])
-    table.sortby = "Entrant"
-
-    logger.debug(f"Results table\n{table}")
     print(table)
-    logger.debug("Draw complete")
     print("\nDraw complete.\n")
     return result
 
