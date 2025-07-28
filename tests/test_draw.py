@@ -77,6 +77,44 @@ def test_draw_command(temp_picks_txt_file: Path, temp_entrants_txt_file: Path):
     assert "Jim" in result.output
 
 
+def test_draw_command_passes_on_arguments(
+    mocker, temp_picks_txt_file: Path, temp_entrants_txt_file: Path
+):
+    mock_draw = mocker.patch("sweeper.draw.draw")
+    mock_get_lines = mocker.patch("sweeper.draw.get_lines_from_file")
+    mock_get_lines.side_effect = [
+        ["Bengals", "Bills", "Chiefs"],
+        ["Harold", "Jim", "Margaret"],
+    ]
+
+    runner = CliRunner()
+    result = runner.invoke(
+        draw_command,
+        [
+            "--picks",
+            temp_picks_txt_file,
+            "--entrants",
+            temp_entrants_txt_file,
+            "--delay",
+            0,
+            "--draw-order",
+            "shuffle",
+            "--output-file",
+            "output.csv",
+            "--plain",
+        ],
+    )
+    mock_get_lines.assert_any_call(filepath=temp_picks_txt_file)
+    mock_get_lines.assert_any_call(filepath=temp_entrants_txt_file)
+    mock_draw.assert_called_once_with(
+        entrants=["Harold", "Jim", "Margaret"],
+        picks=["Bengals", "Bills", "Chiefs"],
+        draw_order="shuffle",
+        delay=0.0,
+        plain=True,
+    )
+
+
 def test_draw_command_file_does_not_exist_raises_error():
     runner = CliRunner()
     result = runner.invoke(
