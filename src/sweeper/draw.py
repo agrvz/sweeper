@@ -36,7 +36,7 @@ def draw(
                             must be true.
         - picks (list):     List of picks (must be unique)
         - draw_order (str): Draw in order of entrants list (i.e. 'entrant 1 gets...'),
-                            picks list (i.e. 'pick 1 goes to...'), or shuffled (i.e. 
+                            picks list (i.e. 'pick 1 goes to...'), or shuffled (i.e.
                             shuffle entrants, then 'entrant 1 gets...').
                             Options: "entrants", "picks", "shuffle". Default is "entrant".
         - delay (float):    Delay in seconds between draws (default is 1.0)
