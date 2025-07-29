@@ -24,7 +24,7 @@ def draw(
     picks: list,
     draw_order: str = "entrants",
     delay: float = 1.0,
-    plain: bool = False,
+    quiet: bool = False,
     debug: bool = False,
 ) -> dict:
     """
@@ -40,7 +40,7 @@ def draw(
                             shuffle entrants, then 'entrant 1 gets...').
                             Options: "entrants", "picks", "shuffle". Default is "entrant".
         - delay (float):    Delay in seconds between draws (default is 1.0)
-        - plain (bool):     If True, no terminal output is printed except the final result
+        - quiet (bool):     If True, no terminal output is printed except the final result
         - debug (bool):     If True, picks are assigned in deterministic order (essentially
                             they are zipped together) instead of being chosen randomly.
                             Default is False.
@@ -50,7 +50,7 @@ def draw(
     logger.debug(f"({len(picks)}) {picks=}")
     logger.debug(f"{draw_order=}")
     logger.debug(f"{delay=}")
-    logger.debug(f"{plain=}")
+    logger.debug(f"{quiet=}")
 
     if len(set(entrants)) < len(entrants):
         message = f"Entrants must be unique but found duplicates: {entrants}"
@@ -119,7 +119,7 @@ def draw(
     logger.debug(f"Undrawn picks ({len(undrawn_picks)}): {undrawn_picks}")
     logger.debug("Draw complete")
 
-    if not plain:
+    if not quiet:
         # Print results to terminal
         if draw_order in ["entrants", "shuffle"]:
             for index, (entrant, pick) in enumerate(result.items()):
@@ -172,19 +172,22 @@ def draw(
     "--draw-order",
     type=click.Choice(["entrants", "picks", "shuffle"], case_sensitive=False),
     default="entrants",
-    help="Order to draw picks: 'entrants' (default), 'picks', or 'shuffle'. "
-    "Draw in order of entrants list (i.e. 'entrant 1 gets...'), "
-    "picks list (i.e. 'pick 1 goes to...'), "
-    "or in order of entrants, but shuffled.",
+    show_default=True,
+    help="Order to draw picks in. "
+    "Draw in order of entrants list ('entrant 1 gets...'), "
+    "picks list ('pick 1 goes to...'), "
+    "or in order of entrants, but shuffled ('entrant 3 gets...')",
 )
 @click.option(
     "--delay",
-    default=1,
+    default=1.0,
+    show_default=True,
     type=float,
-    help="Delay between draw rounds in seconds. Default is 1.0",
+    help="Delay between draw rounds in seconds",
 )
 @click.option(
-    "--plain",
+    "-q",
+    "--quiet",
     is_flag=True,
     default=False,
     help="If set, no terminal output is printed except the final result",
@@ -203,7 +206,7 @@ def draw_command(
     entrants_column: str | int | None = None,
     draw_order: str = "entrants",
     delay: float = 1.0,
-    plain: bool = False,
+    quiet: bool = False,
     output_file: Path | None = None,
 ) -> dict:
     """
@@ -259,7 +262,7 @@ def draw_command(
         picks=picks_list,
         draw_order=draw_order,
         delay=delay,
-        plain=plain,
+        quiet=quiet,
     )
 
     if output_file is None:
