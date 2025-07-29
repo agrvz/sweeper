@@ -90,7 +90,7 @@ Example:
 2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - (3) picks=['Chiefs', 'Ravens', 'Bills']
 2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - draw_order='entrants'
 2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - delay=0.5
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - plain=False
+2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - quiet=False
 2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Drawing for entrant 1: Harold
 2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Assigned pick Ravens to entrant Harold
 2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Drawing for entrant 2: Jim

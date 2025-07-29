@@ -101,7 +101,7 @@ def test_draw_command_passes_on_arguments(
             "shuffle",
             "--output-file",
             "output.csv",
-            "--plain",
+            "--quiet",
         ],
     )
     mock_get_lines.assert_any_call(filepath=temp_picks_txt_file)
@@ -111,7 +111,7 @@ def test_draw_command_passes_on_arguments(
         picks=["Bengals", "Bills", "Chiefs"],
         draw_order="shuffle",
         delay=0.0,
-        plain=True,
+        quiet=True,
     )
 
 
