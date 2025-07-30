@@ -147,7 +147,8 @@ def draw(
     return result
 
 
-examples = """EXAMPLES
+@click.command(
+    epilog="""EXAMPLES
 
 Create and draw a sweepstake using text file inputs:
 
@@ -169,8 +170,7 @@ Draw in order of picks (i.e. 'pick 1 goes to...'):
 
 sweeper draw --picks picks.txt --entrants entrants.txt --draw-order picks
 """
-
-@click.command(epilog=examples)
+)
 @click.option(
     "--entrants",
     required=True,
