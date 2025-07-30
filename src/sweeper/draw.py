@@ -37,7 +37,7 @@ def draw(
         - picks (list):     List of picks (must be unique)
         - draw_order (str): Draw in order of entrants list (i.e. 'entrant 1 gets...'),
                             picks list (i.e. 'pick 1 goes to...'), or shuffled (i.e.
-                            shuffle entrants, then 'entrant 1 gets...').
+                            shuffle entrants, then 'entrant 3 gets...').
                             Options: "entrants", "picks", "shuffle". Default is "entrant".
         - delay (float):    Delay in seconds between draws (default is 1.0)
         - quiet (bool):     If True, no terminal output is printed except the final result
@@ -147,17 +147,29 @@ def draw(
     return result
 
 
-@click.command()
-@click.option(
-    "--picks",
-    required=True,
-    type=click.Path(exists=True, readable=True, dir_okay=False),
-    help="Path to file containing list of picks",
-)
-@click.option(
-    "--picks-column",
-    type=str,
-    help="Column name or index to use from picks file, if a CSV file",
+@click.command(
+    epilog="""EXAMPLES
+
+Create and draw a sweepstake using text file inputs:
+
+sweeper draw --picks picks.txt --entrants entrants.txt
+
+Use CSV files for the inputs, specifying the column names to use:
+
+sweeper draw --picks picks.csv --picks-column name --entrants entrants.csv --entrants-column name
+
+Or use the column index:
+
+sweeper draw --picks picks.csv --picks-column 1 --entrants entrants.csv --entrants-column 1
+
+Write results to an output file:
+
+sweeper draw --picks picks.txt --entrants entrants.txt --output-file results.csv
+
+Draw in order of picks (i.e. 'pick 1 goes to...'):
+
+sweeper draw --picks picks.txt --entrants entrants.txt --draw-order picks
+"""
 )
 @click.option(
     "--entrants",
@@ -169,6 +181,17 @@ def draw(
     "--entrants-column",
     type=str,
     help="Column name or index to use from entrants file, if a CSV file",
+)
+@click.option(
+    "--picks",
+    required=True,
+    type=click.Path(exists=True, readable=True, dir_okay=False),
+    help="Path to file containing list of picks",
+)
+@click.option(
+    "--picks-column",
+    type=str,
+    help="Column name or index to use from picks file, if a CSV file",
 )
 @click.option(
     "--draw-order",
@@ -202,10 +225,10 @@ def draw(
 )
 def draw_command(
     *,
-    picks: Path,
-    picks_column: str | int | None = None,
     entrants: Path,
     entrants_column: str | int | None = None,
+    picks: Path,
+    picks_column: str | int | None = None,
     draw_order: str = "entrants",
     delay: float = 1.0,
     quiet: bool = False,
@@ -221,22 +244,6 @@ def draw_command(
     entrants = Path(entrants)
     if output_file:
         output_file = Path(output_file)
-
-    if picks.suffix == ".csv":
-        logger.debug(f"Picks file suffix is .csv")
-        try:
-            int(picks_column)
-            logger.debug(f"picks_column is an integer - loading csv by column index")
-            picks_list = load_csv(filepath=picks, column_index=int(picks_column))
-        except ValueError:
-            logger.debug(f"picks_column is a string - loading csv by column name")
-            picks_list = load_csv(filepath=picks, column_name=picks_column)
-    elif picks.suffix == ".txt":
-        logger.debug(f"Picks file suffix is .txt")
-        picks_list = get_lines_from_file(filepath=picks)
-    else:
-        logger.error(f"Picks file must be a .csv or .txt file, got {picks.suffix}")
-        raise ValueError(f"Picks file must be a .csv or .txt file, got {picks.suffix}")
 
     if entrants.suffix == ".csv":
         try:
@@ -257,6 +264,22 @@ def draw_command(
         raise ValueError(
             f"Entrants file must be a .csv or .txt file, got {entrants.suffix}"
         )
+
+    if picks.suffix == ".csv":
+        logger.debug(f"Picks file suffix is .csv")
+        try:
+            int(picks_column)
+            logger.debug(f"picks_column is an integer - loading csv by column index")
+            picks_list = load_csv(filepath=picks, column_index=int(picks_column))
+        except ValueError:
+            logger.debug(f"picks_column is a string - loading csv by column name")
+            picks_list = load_csv(filepath=picks, column_name=picks_column)
+    elif picks.suffix == ".txt":
+        logger.debug(f"Picks file suffix is .txt")
+        picks_list = get_lines_from_file(filepath=picks)
+    else:
+        logger.error(f"Picks file must be a .csv or .txt file, got {picks.suffix}")
+        raise ValueError(f"Picks file must be a .csv or .txt file, got {picks.suffix}")
 
     logger.debug("Calling draw function")
     results = draw(

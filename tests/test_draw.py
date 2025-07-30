@@ -83,18 +83,18 @@ def test_draw_command_passes_on_arguments(
     mock_draw = mocker.patch("sweeper.draw.draw")
     mock_get_lines = mocker.patch("sweeper.draw.get_lines_from_file")
     mock_get_lines.side_effect = [
-        ["Bengals", "Bills", "Chiefs"],
         ["Harold", "Jim", "Margaret"],
+        ["Bengals", "Bills", "Chiefs"],
     ]
 
     runner = CliRunner()
     result = runner.invoke(
         draw_command,
         [
-            "--picks",
-            temp_picks_txt_file,
             "--entrants",
             temp_entrants_txt_file,
+            "--picks",
+            temp_picks_txt_file,
             "--delay",
             0,
             "--draw-order",

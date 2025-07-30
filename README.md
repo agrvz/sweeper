@@ -2,110 +2,162 @@
 
 CLI for creating sweepstakes.
 
+---
+
 ## Installation
 
-Install dependencies:
+### Using pipx
+
 ```shell
-uv sync
+pipx install https://github.com/agrvz/sweeper
 ```
 
-View `sweeper` CLI help:
+### Using uv
+
 ```shell
-uv run sweeper --help
+uv tool install https://github.com/agrvz/sweeper
 ```
 
-Or, to run without needing `uv run`, activate the virtual environment first:
+### Using pip
+
 ```shell
-source .venv/bin/activate
+pip install git+https://github.com/agrvz/sweeper.git
 ```
 
-Then run `sweeper` commands directly:
+### Validate installation
+
 ```shell
 sweeper --help
 ```
 
-## Commands
+---
 
-### draw
+## Using Sweeper
 
-Command to create and start a sweepstake draw. Allocates one pick per entrant. For example, picks might be countries in the World Cup, and entrants might be a list of friends' names.
+### Create and draw a sweepstake
 
-View help for `draw` command:
-```shell
-uv run sweeper draw --help
-```
+Use the `draw` command to create and start a sweepstake draw. It allocates one pick per entrant. For example, picks might be a list of countries in the World Cup, and entrants might be a list of friends' names.
 
 Run a sweepstake draw:
 ```shell
 uv run sweeper draw --picks picks.txt --entrants entrants.txt
 ```
 
+#### CLI reference
+
+```
+Usage: sweeper draw [OPTIONS]
+
+  Start a sweepstake draw. Allocate one pick per entrant.
+
+Options:
+  --entrants FILE                 Path to file containing list of entrants
+                                  [required]
+  --entrants-column TEXT          Column name or index to use from entrants
+                                  file, if a CSV file
+  --picks FILE                    Path to file containing list of picks
+                                  [required]
+  --picks-column TEXT             Column name or index to use from picks file,
+                                  if a CSV file
+  --draw-order [entrants|picks|shuffle]
+                                  Order to draw picks in. Draw in order of
+                                  entrants list ('entrant 1 gets...'), picks
+                                  list ('pick 1 goes to...'), or in order of
+                                  entrants, but shuffled ('entrant 3 gets...')
+                                  [default: entrants]
+  --delay FLOAT                   Delay between draw rounds in seconds
+                                  [default: 1.0]
+  -q, --quiet                     If set, no terminal output is printed except
+                                  the final result
+  --output-file FILE              File path to write results to. CSV or JSON
+                                  supported. If not passed, results are
+                                  printed to terminal and no file is written
+  --help                          Show this message and exit.
+
+  EXAMPLES
+
+  Create and draw a sweepstake using text file inputs:
+
+  sweeper draw --picks picks.txt --entrants entrants.txt
+
+  Use CSV files for the inputs, specifying the column names to use:
+
+  sweeper draw --picks picks.csv --picks-column name --entrants entrants.csv
+  --entrants-column name
+
+  Or use the column index:
+
+  sweeper draw --picks picks.csv --picks-column 1 --entrants entrants.csv
+  --entrants-column 1
+
+  Write results to an output file:
+
+  sweeper draw --picks picks.txt --entrants entrants.txt --output-file
+  results.csv
+
+  Draw in order of picks (i.e. 'pick 1 goes to...'):
+
+  sweeper draw --picks picks.txt --entrants entrants.txt --draw-order picks
+```
+
+---
+
 ## Developing
+
+Sweeper uses uv to manage dependencies.
+```shell
+uv sync --dev
+```
 
 Run unit tests:
 ```shell
 uv run pytest -v
 ```
 
-Format code:
+Format code with ruff:
 ```shell
 uv run ruff format .
 ```
 
-## Examples
+### CI
 
-Create a sweepstake with entrants and picks using text file inputs, and start the draw:
-```shell
-uv run sweeper draw --picks picks.txt --entrants entrants.txt --delay 1
-```
+Opening a PR triggers workflows to validate code formatting and run unit tests.
 
-When using CSV files for the inputs you must specify the column name to use:
-```shell
-uv run sweeper draw --picks picks.csv --picks-column name --entrants entrants.csv --entrants-column name --delay 0.1
-```
-
-Or you can use the column index:
-```shell
-uv run sweeper draw --picks picks.csv --picks-column 1 --entrants entrants.csv --entrants-column 1 --delay 0.1
-```
-
-Optionally specify an output file to write results to. Format can either be `.csv`. or `.json`:
-```shell
-uv run sweeper draw --picks picks.csv --picks-column 1 --entrants entrants.csv --entrants-column 1 --delay 0.1 --output-file results.csv
-```
+---
 
 ## Auditing
 
-Logs are written to `logs/audit.log` for auditing purposes. Arguments used to generate the sweepstake are logged, as is each drawn round.
+Logs are written to `logs/audit.log` for auditing purposes. Arguments used to generate the sweepstake are logged and each round drawn is also logged.
 
 Example:
 ```log
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - START: Running draw
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Running command: ['draw', '--picks', 'picks.txt', '--entrants', 'entrants.txt', '--delay', '0.5']
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Picks file suffix is .txt
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Entrants file suffix is .txt
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Calling draw function
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Running draw with debug=False
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - (3) entrants=['Harold', 'Jim', 'Margaret']
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - (3) picks=['Chiefs', 'Ravens', 'Bills']
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - draw_order='entrants'
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - delay=0.5
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - quiet=False
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Drawing for entrant 1: Harold
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Assigned pick Ravens to entrant Harold
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Drawing for entrant 2: Jim
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Assigned pick Bills to entrant Jim
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Drawing for entrant 3: Margaret
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Assigned pick Chiefs to entrant Margaret
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Results table
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - START: Running draw
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Running command: ['draw', '--picks', 'picks.txt', '--entrants', 'entrants.txt']
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Entrants file suffix is .txt
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Picks file suffix is .txt
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Calling draw function
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Running draw with debug=False
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - (3) entrants=['Harold', 'Jim', 'Margaret']
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - (3) picks=['Chiefs', 'Ravens', 'Bills']
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - draw_order='entrants'
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - delay=1.0
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - quiet=False
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Drawing for entrant 1: Harold
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Assigned pick Ravens to entrant Harold
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Drawing for entrant 2: Jim
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Assigned pick Chiefs to entrant Jim
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Drawing for entrant 3: Margaret
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Assigned pick Bills to entrant Margaret
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Results table
 +----------+--------+
 | Entrant  |  Pick  |
 +----------+--------+
 |  Harold  | Ravens |
-|   Jim    | Bills  |
-| Margaret | Chiefs |
+|   Jim    | Chiefs |
+| Margaret | Bills  |
 +----------+--------+
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Undrawn picks (0): []
-2025-07-23 23:06:25 UTC - DEBUG    - sweeper.draw - Draw complete
-2025-07-23 23:06:31 UTC - DEBUG    - sweeper.draw - No output file specified - printing results
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Undrawn picks (0): []
+2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Draw complete
+2025-07-30 22:45:18 UTC - DEBUG    - sweeper.draw - No output file specified - printing results
+
 ```
