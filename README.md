@@ -9,9 +9,9 @@ Install dependencies:
 uv sync
 ```
 
-View `sweep` CLI help:
+View `sweeper` CLI help:
 ```shell
-uv run sweep --help
+uv run sweeper --help
 ```
 
 Or, to run without needing `uv run`, activate the virtual environment first:
@@ -19,9 +19,9 @@ Or, to run without needing `uv run`, activate the virtual environment first:
 source .venv/bin/activate
 ```
 
-Then run `sweep` commands directly:
+Then run `sweeper` commands directly:
 ```shell
-sweep --help
+sweeper --help
 ```
 
 ## Commands
@@ -32,12 +32,12 @@ Command to create and start a sweepstake draw. Allocates one pick per entrant. F
 
 View help for `draw` command:
 ```shell
-uv run sweep draw --help
+uv run sweeper draw --help
 ```
 
 Run a sweepstake draw:
 ```shell
-uv run sweep draw --picks picks.txt --entrants entrants.txt
+uv run sweeper draw --picks picks.txt --entrants entrants.txt
 ```
 
 ## Developing
@@ -56,22 +56,22 @@ uv run ruff format .
 
 Create a sweepstake with entrants and picks using text file inputs, and start the draw:
 ```shell
-uv run sweep draw --picks picks.txt --entrants entrants.txt --delay 1
+uv run sweeper draw --picks picks.txt --entrants entrants.txt --delay 1
 ```
 
 When using CSV files for the inputs you must specify the column name to use:
 ```shell
-uv run sweep draw --picks picks.csv --picks-column name --entrants entrants.csv --entrants-column name --delay 0.1
+uv run sweeper draw --picks picks.csv --picks-column name --entrants entrants.csv --entrants-column name --delay 0.1
 ```
 
 Or you can use the column index:
 ```shell
-uv run sweep draw --picks picks.csv --picks-column 1 --entrants entrants.csv --entrants-column 1 --delay 0.1
+uv run sweeper draw --picks picks.csv --picks-column 1 --entrants entrants.csv --entrants-column 1 --delay 0.1
 ```
 
 Optionally specify an output file to write results to. Format can either be `.csv`. or `.json`:
 ```shell
-uv run sweep draw --picks picks.csv --picks-column 1 --entrants entrants.csv --entrants-column 1 --delay 0.1 --output-file results.csv
+uv run sweeper draw --picks picks.csv --picks-column 1 --entrants entrants.csv --entrants-column 1 --delay 0.1 --output-file results.csv
 ```
 
 ## Auditing

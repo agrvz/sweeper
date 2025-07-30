@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sweeper"
-version = "0.4.0"
+version = "0.5.0"
 description = "CLI for creating sweepstakes"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -22,7 +22,7 @@ dev = [
 ]
 
 [project.scripts]
-sweep = "sweeper.main:sweep"
+sweeper = "sweeper.main:sweeper"
 
 [tool.uv]
 package = true
