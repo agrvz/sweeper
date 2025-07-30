@@ -150,6 +150,7 @@ def draw(
 @click.command()
 @click.option(
     "--picks",
+    required=True,
     type=click.Path(exists=True, readable=True, dir_okay=False),
     help="Path to file containing list of picks",
 )
@@ -160,6 +161,7 @@ def draw(
 )
 @click.option(
     "--entrants",
+    required=True,
     type=click.Path(exists=True, readable=True, dir_okay=False),
     help="Path to file containing list of entrants",
 )
