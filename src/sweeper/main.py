@@ -25,13 +25,13 @@ def setup_logging():
 
 
 @click.group()
-def sweep():
+def sweeper():
     setup_logging()
     pass
 
 
-sweep.add_command(draw_command)
+sweeper.add_command(draw_command)
 
 
 if __name__ == "__main__":
-    sweep()
+    sweeper()
