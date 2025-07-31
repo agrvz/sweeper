@@ -130,7 +130,7 @@ Format code with ruff:
 uv run ruff format .
 ```
 
-### CI
+### CI
 
 Opening a PR triggers workflows to validate code formatting and run unit tests.
 
