@@ -1,4 +1,15 @@
-# Sweeper
+<div align="center">
+
+<head>
+    <h1>Sweeper</h1>
+</header>
+
+<!-- Badges -->
+[![Python 3.10](https://img.shields.io/badge/python-%3E=_3.10-blue.svg)](https://www.google.com)
+[![test](https://github.com/agrvz/sweeper/actions/workflows/test.yml/badge.svg)](https://github.com/agrvz/sweeper/actions?query=workflow%3Atest)
+[![lint](https://github.com/agrvz/sweeper/actions/workflows/lint.yml/badge.svg)](https://github.com/agrvz/sweeper/actions?query=workflow%3Alint)
+
+</div>
 
 CLI for creating sweepstakes.
 
@@ -119,7 +130,7 @@ Format code with ruff:
 uv run ruff format .
 ```
 
-### CI
+### CI
 
 Opening a PR triggers workflows to validate code formatting and run unit tests.
 
