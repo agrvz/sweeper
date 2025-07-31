@@ -126,6 +126,32 @@ def test_draw_command_file_does_not_exist_raises_error():
     assert "File 'doesnotexist.txt' does not exist" in result.output
 
 
+def test_draw_command_with_csv_columns(
+    mocker, temp_entrants_csv_file, temp_picks_csv_file
+):
+    mock_load_csv = mocker.patch("sweeper.draw.load_csv")
+
+    runner = CliRunner()
+    result = runner.invoke(
+        draw_command,
+        [
+            "--entrants",
+            temp_entrants_csv_file,
+            "--entrants-column",
+            1,
+            "--picks",
+            temp_picks_csv_file,
+            "--picks-column",
+            1,
+            "--delay",
+            0,
+        ],
+    )
+
+    mock_load_csv.assert_any_call(filepath=temp_entrants_csv_file, column_index=1)
+    mock_load_csv.assert_any_call(filepath=temp_picks_csv_file, column_index=1)
+
+
 def test_draw_command_invalid_file_suffix_raises_error(temp_py_file: Path):
     runner = CliRunner()
     result = runner.invoke(
