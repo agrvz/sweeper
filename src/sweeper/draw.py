@@ -268,9 +268,9 @@ def draw_command(
     if picks.suffix == ".csv":
         logger.debug(f"Picks file suffix is .csv")
         try:
-            int(picks_column)
+            picks_column = int(picks_column)
             logger.debug(f"picks_column is an integer - loading csv by column index")
-            picks_list = load_csv(filepath=picks, column_index=int(picks_column))
+            picks_list = load_csv(filepath=picks, column_index=picks_column)
         except ValueError:
             logger.debug(f"picks_column is a string - loading csv by column name")
             picks_list = load_csv(filepath=picks, column_name=picks_column)
