@@ -40,7 +40,7 @@ Use the `draw` command to create and start a sweepstake draw. It allocates one p
 
 Run a sweepstake draw:
 ```shell
-uv run sweeper draw --picks picks.txt --entrants entrants.txt
+sweeper draw --entrants entrants.txt --picks picks.txt
 ```
 
 #### CLI reference
@@ -78,26 +78,26 @@ Options:
 
   Create and draw a sweepstake using text file inputs:
 
-  sweeper draw --picks picks.txt --entrants entrants.txt
+  sweeper draw --entrants entrants.txt --picks picks.txt
 
   Use CSV files for the inputs, specifying the column names to use:
 
-  sweeper draw --picks picks.csv --picks-column name --entrants entrants.csv
-  --entrants-column name
+  sweeper draw --entrants entrants.csv --entrants-column name --picks
+  picks.csv --picks-column name
 
   Or use the column index:
 
-  sweeper draw --picks picks.csv --picks-column 1 --entrants entrants.csv
-  --entrants-column 1
+  sweeper draw --entrants entrants.csv --entrants-column 1 --picks picks.csv
+  --picks-column 1
 
   Write results to an output file:
 
-  sweeper draw --picks picks.txt --entrants entrants.txt --output-file
+  sweeper draw --entrants entrants.txt --picks picks.txt --output-file
   results.csv
 
   Draw in order of picks (i.e. 'pick 1 goes to...'):
 
-  sweeper draw --picks picks.txt --entrants entrants.txt --draw-order picks
+  sweeper draw --entrants entrants.txt --picks picks.txt --draw-order picks
 ```
 
 ---

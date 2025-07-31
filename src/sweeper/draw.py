@@ -152,23 +152,23 @@ def draw(
 
 Create and draw a sweepstake using text file inputs:
 
-sweeper draw --picks picks.txt --entrants entrants.txt
+sweeper draw --entrants entrants.txt --picks picks.txt
 
 Use CSV files for the inputs, specifying the column names to use:
 
-sweeper draw --picks picks.csv --picks-column name --entrants entrants.csv --entrants-column name
+sweeper draw --entrants entrants.csv --entrants-column name --picks picks.csv --picks-column name
 
 Or use the column index:
 
-sweeper draw --picks picks.csv --picks-column 1 --entrants entrants.csv --entrants-column 1
+sweeper draw --entrants entrants.csv --entrants-column 1 --picks picks.csv --picks-column 1
 
 Write results to an output file:
 
-sweeper draw --picks picks.txt --entrants entrants.txt --output-file results.csv
+sweeper draw --entrants entrants.txt --picks picks.txt --output-file results.csv
 
 Draw in order of picks (i.e. 'pick 1 goes to...'):
 
-sweeper draw --picks picks.txt --entrants entrants.txt --draw-order picks
+sweeper draw --entrants entrants.txt --picks picks.txt --draw-order picks
 """
 )
 @click.option(
@@ -248,7 +248,7 @@ def draw_command(
     if entrants.suffix == ".csv":
         try:
             logger.debug(f"Entrants file suffix is .csv")
-            int(entrants_column)
+            entrants_column = int(entrants_column)
             logger.debug(f"entrants_column is an integer - loading csv by column index")
             entrants_list = load_csv(filepath=entrants, column_index=entrants_column)
         except ValueError:
