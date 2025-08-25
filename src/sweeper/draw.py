@@ -14,6 +14,7 @@ from sweeper.io import (
     write_result_to_csv,
     write_result_to_json,
 )
+from sweeper.option_required_if import OptionRequiredIf
 
 
 logger = logging.getLogger(__name__)
@@ -179,6 +180,9 @@ sweeper draw --entrants entrants.txt --picks picks.txt --draw-order picks
 )
 @click.option(
     "--entrants-column",
+    cls=OptionRequiredIf,
+    required_if_option="entrants",
+    required_if_value=".csv",
     type=str,
     help="Column name or index to use from entrants file, if a CSV file",
 )
