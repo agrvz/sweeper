@@ -20,13 +20,13 @@ CLI for creating sweepstakes.
 ### Using pipx
 
 ```shell
-pipx install https://github.com/agrvz/sweeper
+pipx install git+https://github.com/agrvz/sweeper
 ```
 
 ### Using uv
 
 ```shell
-uv tool install https://github.com/agrvz/sweeper
+uv tool install git+https://github.com/agrvz/sweeper
 ```
 
 ### Using pip
@@ -172,5 +172,4 @@ Example:
 2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Undrawn picks (0): []
 2025-07-30 22:45:05 UTC - DEBUG    - sweeper.draw - Draw complete
 2025-07-30 22:45:18 UTC - DEBUG    - sweeper.draw - No output file specified - printing results
-
 ```
