@@ -173,7 +173,7 @@ def test_draw_command_with_csv_but_no_column_raises_error(
     assert result.exit_code != 0
     assert isinstance(result.exception, SystemExit)
     assert (
-        "Missing option '--entrants-column'. Required if <lambda>(--entrants)=.csv"
+        "Missing option '--entrants-column'. Required if get_path_suffix(--entrants)=.csv"
         in result.output
     )
 
