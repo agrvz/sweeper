@@ -183,6 +183,7 @@ sweeper draw --entrants entrants.txt --picks picks.txt --draw-order picks
     cls=OptionRequiredIf,
     required_if_option="entrants",
     required_if_value=".csv",
+    required_if_value_transform=lambda x: x.suffix,
     type=str,
     help="Column name or index to use from entrants file, if a CSV file",
 )
@@ -194,6 +195,10 @@ sweeper draw --entrants entrants.txt --picks picks.txt --draw-order picks
 )
 @click.option(
     "--picks-column",
+    cls=OptionRequiredIf,
+    required_if_option="picks",
+    required_if_value=".csv",
+    required_if_value_transform=lambda x: x.suffix,
     type=str,
     help="Column name or index to use from picks file, if a CSV file",
 )

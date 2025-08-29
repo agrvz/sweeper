@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import click
 import pytest
 from click.testing import CliRunner
 
@@ -150,6 +151,31 @@ def test_draw_command_with_csv_columns(
 
     mock_load_csv.assert_any_call(filepath=temp_entrants_csv_file, column_index=1)
     mock_load_csv.assert_any_call(filepath=temp_picks_csv_file, column_index=1)
+
+
+def test_draw_command_with_csv_but_no_column_raises_error(
+    mocker, temp_entrants_csv_file, temp_picks_csv_file
+):
+    runner = CliRunner()
+    result = runner.invoke(
+        draw_command,
+        [
+            "--entrants",
+            temp_entrants_csv_file,
+            "--picks",
+            temp_picks_csv_file,
+            "--picks-column",
+            1,
+            "--delay",
+            0,
+        ],
+    )
+    assert result.exit_code != 0
+    assert isinstance(result.exception, SystemExit)
+    assert (
+        "Missing option '--entrants-column'. Required if <lambda>(--entrants)=.csv"
+        in result.output
+    )
 
 
 def test_draw_command_invalid_file_suffix_raises_error(temp_py_file: Path):
