@@ -96,3 +96,11 @@ def write_result_to_json(result: dict, path: Path) -> None:
     """
     with open(path, "w") as jsonfile:
         json.dump(result, jsonfile, indent=4)
+
+
+def get_path_suffix(path: Path) -> str:
+    """
+    Implemented as a named function to display more useful help text for
+    OptionRequiredIf options - a lambda function only displays as <lambda>.
+    """
+    return path.suffix

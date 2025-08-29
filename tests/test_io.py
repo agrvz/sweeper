@@ -6,6 +6,7 @@ import pytest
 
 from sweeper.io import (
     get_lines_from_file,
+    get_path_suffix,
     load_csv_rows_as_lists,
     load_csv_rows_as_dicts,
     load_csv,
@@ -153,3 +154,14 @@ def test_write_result_to_json(tmp_path: Path):
     with open(file, "r") as in_file:
         file_data = json.load(in_file)
         assert file_data == result
+
+
+def test_get_path_suffix():
+    assert get_path_suffix(Path("file.csv")) == ".csv"
+    assert get_path_suffix(Path("file.txt")) == ".txt"
+    assert get_path_suffix(Path("file")) == ""
+    assert get_path_suffix(Path("file.name.with.dots.json")) == ".json"
+    assert get_path_suffix(Path("/some/path/to/file.csv")) == ".csv"
+    assert get_path_suffix(Path("/some/path/to/file")) == ""
+    with pytest.raises(AttributeError):
+        get_path_suffix("not/a/path/object")
