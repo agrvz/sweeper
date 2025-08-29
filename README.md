@@ -65,11 +65,13 @@ Options:
   --entrants FILE                 Path to file containing list of entrants
                                   [required]
   --entrants-column TEXT          Column name or index to use from entrants
-                                  file, if a CSV file
+                                  file, if a CSV file. Option required if
+                                  get_path_suffix(--entrants) is '.csv'
   --picks FILE                    Path to file containing list of picks
                                   [required]
   --picks-column TEXT             Column name or index to use from picks file,
-                                  if a CSV file
+                                  if a CSV file. Option required if
+                                  get_path_suffix(--picks) is '.csv'
   --draw-order [entrants|picks|shuffle]
                                   Order to draw picks in. Draw in order of
                                   entrants list ('entrant 1 gets...'), picks
