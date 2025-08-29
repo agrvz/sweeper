@@ -103,4 +103,5 @@ def get_path_suffix(path: Path) -> str:
     Implemented as a named function to display more useful help text for
     OptionRequiredIf options - a lambda function only displays as <lambda>.
     """
+    path = Path(path)
     return path.suffix

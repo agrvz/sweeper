@@ -163,5 +163,4 @@ def test_get_path_suffix():
     assert get_path_suffix(Path("file.name.with.dots.json")) == ".json"
     assert get_path_suffix(Path("/some/path/to/file.csv")) == ".csv"
     assert get_path_suffix(Path("/some/path/to/file")) == ""
-    with pytest.raises(AttributeError):
-        get_path_suffix("not/a/path/object")
+    assert get_path_suffix("not/a/path/object.txt") == ".txt"
