@@ -54,9 +54,9 @@ class OptionRequiredIf(click.Option):
 
         assert self.required_if_option, "'required_if_option' parameter required"
         if self.required_if_value_transform:
-            assert (
-                self.required_if_value
-            ), "'required_if_value' parameter required if using 'required_if_value_transform'"
+            assert self.required_if_value, (
+                "'required_if_value' parameter required if using 'required_if_value_transform'"
+            )
 
         if self.required_if_value_transform:
             kwargs["help"] = (

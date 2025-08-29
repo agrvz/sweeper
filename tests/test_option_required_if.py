@@ -58,7 +58,6 @@ def test_option_required_if_value_transform_missing_value():
 
 
 def test_option_required_if_value_transform():
-
     def upper_case(x: str) -> str:
         return x.upper()
 
@@ -124,7 +123,6 @@ def test_option_required_if_value_transform_lambda():
 
 
 def test_option_required_if_value_check():
-
     def longer_than_5(x: str) -> bool:
         return len(x) > 5
 
