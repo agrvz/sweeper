@@ -49,6 +49,12 @@ sweeper --help
 
 Use the `draw` command to create and start a sweepstake draw. It allocates one pick per entrant. For example, picks might be a list of countries in the World Cup, and entrants might be a list of friends' names.
 
+Create example files to hold entrants and picks:
+```shell
+echo "Harold\nJim\nMargaret" > entrants.txt
+echo "Bills\nChiefs\nRavens" > picks.txt
+```
+
 Run a sweepstake draw:
 ```shell
 sweeper draw --entrants entrants.txt --picks picks.txt
