@@ -57,17 +57,28 @@ sweeper draw --entrants entrants.txt --picks picks.txt
 #### CLI reference
 
 ```
+Usage: sweeper [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --version  Show the version and exit.
+  --help     Show this message and exit.
+
+Commands:
+  draw  Start a sweepstake draw.
+```
+
+```
 Usage: sweeper draw [OPTIONS]
 
   Start a sweepstake draw. Allocate one pick per entrant.
 
 Options:
-  --entrants FILE                 Path to file containing list of entrants
+  -e, --entrants FILE             Path to file containing list of entrants
                                   [required]
   --entrants-column TEXT          Column name or index to use from entrants
                                   file, if a CSV file. Option required if
                                   get_path_suffix(--entrants) is '.csv'
-  --picks FILE                    Path to file containing list of picks
+  -p, --picks FILE                Path to file containing list of picks
                                   [required]
   --picks-column TEXT             Column name or index to use from picks file,
                                   if a CSV file. Option required if
