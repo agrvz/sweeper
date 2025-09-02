@@ -174,6 +174,7 @@ sweeper draw --entrants entrants.txt --picks picks.txt --draw-order picks
 """
 )
 @click.option(
+    "-e",
     "--entrants",
     required=True,
     type=click.Path(exists=True, readable=True, dir_okay=False),
@@ -189,6 +190,7 @@ sweeper draw --entrants entrants.txt --picks picks.txt --draw-order picks
     help="Column name or index to use from entrants file, if a CSV file.",
 )
 @click.option(
+    "-p",
     "--picks",
     required=True,
     type=click.Path(exists=True, readable=True, dir_okay=False),

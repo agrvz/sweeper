@@ -78,6 +78,25 @@ def test_draw_command(temp_picks_txt_file: Path, temp_entrants_txt_file: Path):
     assert "Jim" in result.output
 
 
+def test_draw_command_short_options(
+    temp_picks_txt_file: Path, temp_entrants_txt_file: Path
+):
+    runner = CliRunner()
+    result = runner.invoke(
+        draw_command,
+        [
+            "-p",
+            temp_picks_txt_file,
+            "-e",
+            temp_entrants_txt_file,
+            "--delay",
+            "0",
+        ],
+    )
+    assert result.exit_code == 0
+    assert "Jim" in result.output
+
+
 def test_draw_command_passes_on_arguments(
     mocker, temp_picks_txt_file: Path, temp_entrants_txt_file: Path
 ):
