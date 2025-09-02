@@ -25,6 +25,7 @@ def setup_logging():
 
 
 @click.group()
+@click.version_option()
 def sweeper():
     setup_logging()
     pass
